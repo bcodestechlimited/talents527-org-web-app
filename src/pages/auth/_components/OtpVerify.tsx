@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form } from "@/components/ui/form";
 import { useState } from "react";
-import { OtpSchema } from "@/schemas/auth";
+import { OtpSchema } from "@/schemas/auth.schema";
 import { useMutation } from "@tanstack/react-query";
 import { getErrorMessage } from "@/lib/errorHandler";
 import { motion } from "framer-motion";

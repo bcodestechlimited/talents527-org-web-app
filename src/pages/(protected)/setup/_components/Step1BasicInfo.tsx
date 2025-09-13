@@ -4,7 +4,7 @@ import { FormTextInput } from "@/components/shared/FormTextInput";
 import { FormSelectInput } from "@/components/shared/FormSelectInput";
 import type { UseFormReturn } from "react-hook-form";
 import type z from "zod";
-import type { orgSetupSchema } from "@/schemas/org.schema";
+import type { orgSetupSchema } from "@/schemas/organisation.schema";
 import { itemVariants } from "@/animations/setup";
 
 const roleOptions = [

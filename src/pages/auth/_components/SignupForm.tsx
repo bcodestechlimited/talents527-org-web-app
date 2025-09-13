@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import { Form } from "@/components/ui/form";
 import { useState } from "react";
-import { SignupSchema } from "@/schemas/auth";
+import { SignupSchema } from "@/schemas/auth.schema";
 import { useMutation } from "@tanstack/react-query";
 import { getErrorMessage } from "@/lib/errorHandler";
 import { FormTextInput } from "@/components/shared/FormTextInput";

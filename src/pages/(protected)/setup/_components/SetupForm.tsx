@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
-import { orgSetupSchema } from "@/schemas/org.schema";
+import { orgSetupSchema } from "@/schemas/organisation.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowLeft, Loader2 } from "lucide-react";
 import { useState } from "react";

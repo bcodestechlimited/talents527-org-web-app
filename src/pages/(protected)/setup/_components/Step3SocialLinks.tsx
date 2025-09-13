@@ -1,7 +1,7 @@
 import { itemVariants } from "@/animations/setup";
 import { FormTextInput } from "@/components/shared/FormTextInput";
 import { Badge } from "@/components/ui/badge";
-import type { orgSetupSchema } from "@/schemas/org.schema";
+import type { orgSetupSchema } from "@/schemas/organisation.schema";
 import { motion } from "framer-motion";
 import type { UseFormReturn } from "react-hook-form";
 import type z from "zod";

@@ -11,7 +11,7 @@ import { FormTextInput } from "@/components/shared/FormTextInput";
 import { itemVariants } from "@/animations/setup";
 import type { UseFormReturn } from "react-hook-form";
 import type z from "zod";
-import type { orgSetupSchema } from "@/schemas/org.schema";
+import type { orgSetupSchema } from "@/schemas/organisation.schema";
 
 interface Step2AboutOrgProps {
   form: UseFormReturn<z.infer<typeof orgSetupSchema>>;
