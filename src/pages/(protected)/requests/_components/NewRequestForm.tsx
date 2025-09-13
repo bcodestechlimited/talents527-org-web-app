@@ -7,15 +7,18 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router";
+import { useNavigate, useOutletContext } from "react-router";
 import { RequestTextInput } from "./RequestTextInput";
 import { RequestTextEditor } from "./RequestTextEditor";
 import { RequestSelectInput } from "./RequestSelectInput";
 import { RequestTimeInput } from "./RequestTimeInput";
 import { RequestDateInput } from "./RequestDateInput";
-import { RequestDocumentUpload } from "./RequestDocumentUpload";
+import MultiDocumentUpload from "./RequestDocumentUpload";
+import type { OrgInfoContext } from "@/types/contexts";
+import { Button } from "@/components/ui/button";
 
 const NewRequestForm = () => {
+  const { orgInfo, refetch } = useOutletContext<OrgInfoContext>();
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
 
@@ -40,7 +43,7 @@ const NewRequestForm = () => {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(handleSubmit)}>
+      <form className="space-y-5" onSubmit={form.handleSubmit(handleSubmit)}>
         <div className="grid grid-cols-2 gap-5">
           <RequestTextInput
             control={form.control}
@@ -141,11 +144,16 @@ const NewRequestForm = () => {
             name="specialNote"
             label="Special Note"
           />
-          {/* Upload documents component */}
           <div className="col-span-2">
-            <RequestDocumentUpload control={form.control} name="documents" />
+            <MultiDocumentUpload
+              organisation={orgInfo.organisation}
+              onUploadSuccess={() => {}}
+            />
           </div>
         </div>
+        <Button className="h-10 rounded-full bg-indigo-700">
+          Submit Request
+        </Button>
       </form>
     </Form>
   );

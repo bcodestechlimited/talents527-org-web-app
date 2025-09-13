@@ -1,3 +1,4 @@
+import type { Document } from "./documents";
 import type { Asset } from "./upload";
 import type { User } from "./user";
 
@@ -25,6 +26,9 @@ export interface Organisation {
     instagram?: string;
     youtube?: string;
   };
+  requestDocsIds: Document[];
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 export interface FetchOrgResponse {
