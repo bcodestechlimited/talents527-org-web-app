@@ -1,8 +1,6 @@
 import { z } from "zod";
 
 const baseRequestSchema = z.object({
-  planCost: z.number().min(1, { message: "Plan cost is required" }),
-  selectedPlan: z.enum(["basic", "standard", "enterprise"]),
   title: z
     .string({ required_error: "Title is required" })
     .min(1, { message: "Title is required" }),
@@ -84,12 +82,7 @@ export const newRequestSchema = baseRequestSchema
     }
   );
 
-export const updateRequestSchema = baseRequestSchema
-  .omit({
-    selectedPlan: true,
-    planCost: true,
-  })
-  .partial();
+export const updateRequestSchema = baseRequestSchema.partial();
 
 export type NewRequestSchemaData = z.infer<typeof newRequestSchema>;
 export type UpdateRequestSchemaData = z.infer<typeof updateRequestSchema>;

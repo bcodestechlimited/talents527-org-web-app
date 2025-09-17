@@ -1,9 +1,9 @@
 import "./App.css";
 
 import { BrowserRouter, Routes, Route } from "react-router";
-
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "sonner";
+
 import HomePage from "./pages/home/home";
 import SignupPage from "./pages/auth/signup";
 import SigninPage from "./pages/auth/signin";
@@ -19,42 +19,46 @@ import OtpPage from "./pages/auth/otp";
 import SetupLayout from "./components/layouts/dashboard/Setup";
 import NewRequestsPage from "./pages/(protected)/requests/new-request";
 import RequestDetailsPage from "./pages/(protected)/requests/request-details";
+import AppNotificationWrapper from "./providers/AppNotificationWrapper";
 
 function App() {
   const queryClient = new QueryClient();
+
   return (
     <QueryClientProvider client={queryClient}>
-      <Toaster />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<HomePage />} />
+      <AppNotificationWrapper>
+        <Toaster />
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<HomePage />} />
 
-          <Route path="auth" element={<AuthLayout />}>
-            <Route path="signup" element={<SignupPage />} />
-            <Route path="signin" element={<SigninPage />} />
-            <Route path="verify-account" element={<OtpPage />} />
-          </Route>
-
-          <Route>
-            <Route path="dashboard" element={<DashboardLayout />}>
-              <Route index element={<ProfilePage />} />
-              <Route path="settings" element={<SettingsPage />} />
-              <Route path="candidates" element={<CandidatesPage />} />
-              <Route path="requests" element={<RequestsPage />} />
-              <Route path="requests/new" element={<NewRequestsPage />} />
-              <Route
-                path="requests/:requestId"
-                element={<RequestDetailsPage />}
-              />
-              <Route path="wallet" element={<WalletPage />} />
+            <Route path="auth" element={<AuthLayout />}>
+              <Route path="signup" element={<SignupPage />} />
+              <Route path="signin" element={<SigninPage />} />
+              <Route path="verify-account" element={<OtpPage />} />
             </Route>
-          </Route>
 
-          <Route path="setup" element={<SetupLayout />}>
-            <Route index element={<SetupPage />} />
-          </Route>
-        </Routes>
-      </BrowserRouter>
+            <Route>
+              <Route path="dashboard" element={<DashboardLayout />}>
+                <Route index element={<ProfilePage />} />
+                <Route path="settings" element={<SettingsPage />} />
+                <Route path="candidates" element={<CandidatesPage />} />
+                <Route path="requests" element={<RequestsPage />} />
+                <Route path="requests/new" element={<NewRequestsPage />} />
+                <Route
+                  path="requests/:requestId"
+                  element={<RequestDetailsPage />}
+                />
+                <Route path="wallet" element={<WalletPage />} />
+              </Route>
+            </Route>
+
+            <Route path="setup" element={<SetupLayout />}>
+              <Route index element={<SetupPage />} />
+            </Route>
+          </Routes>
+        </BrowserRouter>
+      </AppNotificationWrapper>
     </QueryClientProvider>
   );
 }

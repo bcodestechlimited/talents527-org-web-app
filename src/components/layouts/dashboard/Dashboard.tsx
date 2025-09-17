@@ -43,7 +43,7 @@ const DashboardLayout = () => {
         </div>
 
         <div className="flex-1 flex flex-col">
-          <Navbar url={data?.organisation?.logoId?.url} />
+          <Navbar organisation={data?.organisation} />
           <div className="w-full">
             <div className="">
               <div className="fixed right-0 top-0 -z-10">

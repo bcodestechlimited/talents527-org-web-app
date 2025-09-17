@@ -85,6 +85,8 @@ const NewRequestForm = () => {
         planCost: planConfig.price,
       };
 
+      console.log(formDataWithPlan);
+
       await requestMutation.mutateAsync(formDataWithPlan);
     } catch (error) {
       console.error("New request error:", error);

@@ -22,6 +22,7 @@ import {
   itemVariants,
 } from "@/animations/setup";
 import { Loader2 } from "lucide-react";
+import { initNotificationService } from "@/services/notification-socket.service";
 
 const SigninForm = () => {
   const setUser = useUserStore((state) => state.setUser);
@@ -42,6 +43,11 @@ const SigninForm = () => {
     onSuccess: (data) => {
       setError(null);
       setUser(data.user, data.token);
+
+      // Initialize notification service
+      if (data.user) {
+        initNotificationService(data.user.id);
+      }
 
       if (data.user?.role === "organisation" && !data.user.isOrgSetup) {
         navigate("/setup", { replace: true });
