@@ -21,6 +21,7 @@ type Props<T extends FieldValues> = {
   name: Path<T>;
   label: string;
   placeholder?: string;
+  isDisabled?: boolean;
 };
 
 export const RequestDateInput = <T extends FieldValues>({
@@ -28,6 +29,7 @@ export const RequestDateInput = <T extends FieldValues>({
   name,
   label,
   placeholder,
+  isDisabled = false,
 }: Props<T>) => (
   <FormField
     control={control}
@@ -40,9 +42,10 @@ export const RequestDateInput = <T extends FieldValues>({
             <PopoverTrigger asChild>
               <Button
                 variant="outline"
+                disabled={isDisabled}
                 className={`h-10 w-full px-4 rounded-full justify-start text-left ${
                   !field.value && "text-muted-foreground"
-                }`}
+                } ${isDisabled && "opacity-50 cursor-not-allowed"}`}
               >
                 <CalendarIcon className="mr-2 h-4 w-4" />
                 {field.value ? (

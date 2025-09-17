@@ -29,7 +29,6 @@ import {
 
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import type { PaginationMeta } from "@/types/pagination";
 
 import {
   ChevronLeft,
@@ -37,6 +36,7 @@ import {
   ChevronsLeft,
   ChevronsRight,
 } from "lucide-react";
+import type { Pagination } from "@/types/pagination";
 
 export interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -47,7 +47,7 @@ export interface DataTableProps<TData, TValue> {
   clearSelection?: boolean;
   onSelectionCleared?: () => void;
 
-  paginationMeta?: PaginationMeta;
+  paginationMeta?: Pagination;
   onPageChange?: (page: number) => void;
   onPageSizeChange?: (pageSize: number) => void;
   isLoading?: boolean;

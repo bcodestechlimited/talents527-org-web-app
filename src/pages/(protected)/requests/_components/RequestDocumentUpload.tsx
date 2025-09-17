@@ -21,6 +21,7 @@ interface MultiDocumentUploadProps {
   onUploadSuccess: () => void;
   maxFiles?: number;
   maxFileSize?: number;
+  isDisabled?: boolean;
 }
 
 export default function MultiDocumentUpload({
@@ -28,6 +29,7 @@ export default function MultiDocumentUpload({
   onUploadSuccess,
   maxFiles = 10,
   maxFileSize = 5,
+  isDisabled = false,
 }: MultiDocumentUploadProps) {
   const [documents, setDocuments] = useState<DocumentFile[]>([]);
   const [error, setError] = useState<string | null>(null);
@@ -198,14 +200,20 @@ export default function MultiDocumentUpload({
         ref={inputRef}
         accept=".pdf,.doc,.docx,.txt,.jpg,.jpeg,.png,.gif"
         multiple
+        disabled={isDisabled}
         onChange={handleFileChange}
         className="hidden"
       />
 
       <div className="space-y-2">
         <div
-          onClick={triggerFileInput}
-          className="w-full h-32 border-2 border-dashed border-gray-300 rounded-lg flex flex-col items-center justify-center cursor-pointer hover:border-indigo-400 hover:bg-indigo-50 transition-colors"
+          onClick={!isDisabled ? triggerFileInput : undefined}
+          className={`w-full h-32 border-2 border-dashed rounded-lg flex flex-col items-center justify-center transition-colors
+    ${
+      isDisabled
+        ? "border-gray-200 bg-gray-100 text-gray-400 cursor-not-allowed"
+        : "border-gray-300 hover:border-indigo-400 hover:bg-indigo-50 cursor-pointer"
+    }`}
         >
           <Upload className="h-8 w-8 text-gray-400 mb-2" />
           <span className="text-sm text-gray-500">
@@ -224,7 +232,7 @@ export default function MultiDocumentUpload({
           </h4>
           <div className="space-y-2">
             {existingDocuments.map((doc) => (
-              <ExistingDocumentCard key={doc.id} document={doc} />
+              <ExistingDocumentCard key={doc._id} document={doc} />
             ))}
           </div>
         </div>

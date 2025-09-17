@@ -13,7 +13,10 @@ export const Sidebar = () => {
   const { pathname } = useLocation();
 
   return (
-    <div className="h-full bg-gray-50 border-r flex flex-col justify-between w-[300px]">
+    <div
+      className="h-screen bg-gray-50 border-r flex flex-col justify-between w-[300px]
+                 sticky top-0 left-0 z-40"
+    >
       <div>
         <div className="px-4 h-[70px] border-b flex items-center space-x-2">
           <div className="w-8 h-8">
@@ -22,7 +25,7 @@ export const Sidebar = () => {
           <h1 className="text-xl font-semibold">Talents527</h1>
         </div>
 
-        <div className="p-2 flex flex-col space-y-1">
+        <div className="p-2 flex flex-col space-y-1 overflow-y-auto">
           <SidebarItem
             label="Profile"
             icon={User}
@@ -59,7 +62,7 @@ export const Sidebar = () => {
       <div>
         <div className="p-6 text-gray-500">
           <div className="flex items-center space-x-1 text-sm">
-            <p className="">&copy; 2025</p>
+            <p>&copy; 2025</p>
             <p>BCT.Design</p>
           </div>
           <p className="mt-1 text-xs">

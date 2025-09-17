@@ -1,5 +1,5 @@
 export interface Document {
-  id: string;
+  _id: string;
   url: string;
   publicId: string;
   assetType: string;

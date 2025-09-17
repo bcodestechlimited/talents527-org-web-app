@@ -46,10 +46,10 @@ const DashboardLayout = () => {
           <Navbar url={data?.organisation?.logoId?.url} />
           <div className="w-full">
             <div className="">
-              <div className="absolute right-0 top-0 -z-10">
+              <div className="fixed right-0 top-0 -z-10">
                 <img src={rightCircle} alt="Right Circle" />
               </div>
-              <div className="absolute left-0 top-8 -z-10">
+              <div className="fixed left-0 top-8 -z-10">
                 <img src={leftCircle} alt="Left Circle" />
               </div>
               <Outlet context={{ orgInfo: data, refetch }} />

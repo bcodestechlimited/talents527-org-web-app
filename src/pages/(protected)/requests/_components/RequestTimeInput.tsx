@@ -14,6 +14,7 @@ type Props<T extends FieldValues> = {
   name: Path<T>;
   label: string;
   showSeconds?: boolean;
+  disabled?: boolean;
 };
 
 export const RequestTimeInput = <T extends FieldValues>({
@@ -21,6 +22,7 @@ export const RequestTimeInput = <T extends FieldValues>({
   name,
   label,
   showSeconds = true,
+  disabled,
 }: Props<T>) => {
   return (
     <FormField
@@ -46,6 +48,7 @@ export const RequestTimeInput = <T extends FieldValues>({
                   step={showSeconds ? "1" : "60"}
                   value={timeValue}
                   onChange={handleTimeChange}
+                  disabled={disabled}
                   className="bg-background appearance-none [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none h-10 px-4 rounded-full"
                 />
               </div>

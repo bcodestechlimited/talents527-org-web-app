@@ -1,8 +1,8 @@
-import { getOrganisationsRequests } from "@/services/requests.service";
-import type { GetAllRequestsResponse } from "@/types/requests";
+import { fetchTransactions } from "@/services/transaction.service";
+import type { GetTransactionsResponse } from "@/types/transactions";
 import { useQuery, type UseQueryOptions } from "@tanstack/react-query";
 
-export const useFetchRequests = (
+export const useFetchTransactions = (
   enabled = true,
   params: {
     page?: number;
@@ -11,16 +11,16 @@ export const useFetchRequests = (
     search?: string;
   } = { page: 1, limit: 10 },
   options?: Omit<
-    UseQueryOptions<GetAllRequestsResponse, Error>,
+    UseQueryOptions<GetTransactionsResponse, Error>,
     "queryKey" | "queryFn"
   >
 ) => {
   const normalizedStatus = params.status?.toUpperCase();
 
-  return useQuery<GetAllRequestsResponse, Error>({
-    queryKey: ["requests", params.page, params.limit, params.search],
+  return useQuery<GetTransactionsResponse, Error>({
+    queryKey: ["transactions", params.page, params.limit, params.search],
     queryFn: () =>
-      getOrganisationsRequests({
+      fetchTransactions({
         ...params,
         status: normalizedStatus,
       }),

@@ -1,11 +1,11 @@
 import { Form } from "@/components/ui/form";
 import { getErrorMessage } from "@/lib/errorHandler";
 import {
-  newRequestSchema,
-  type NewRequestSchemaData,
+  updateRequestSchema,
+  type UpdateRequestSchemaData,
 } from "@/schemas/requests.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate, useOutletContext } from "react-router";
 import { RequestTextInput } from "./RequestTextInput";
@@ -15,35 +15,65 @@ import { RequestDateInput } from "./RequestDateInput";
 import MultiDocumentUpload from "./RequestDocumentUpload";
 import type { OrgInfoContext } from "@/types/contexts";
 import { Button } from "@/components/ui/button";
-import { usePlanValidation } from "@/hooks/usePlanValidation";
 import { toast } from "sonner";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { AlertCircle } from "lucide-react";
-import RequestPlanStatus from "./RequestPlanStatus";
-import { useMutation } from "@tanstack/react-query";
-import { createCandidateRequest } from "@/services/requests.service";
+import { AlertCircle, Loader2 } from "lucide-react";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import {
+  getOrganisationsRequestById,
+  updateOrganisationsRequest,
+} from "@/services/requests.service";
 import { RequestTextAreaInput } from "./RequestTextAreaInput";
+import type { GetRequestByIdResponse } from "@/types/requests";
+import RequestEscrowInfo from "./RequestEscrowInfo";
 
-const NewRequestForm = () => {
+interface EditRequestFormProps {
+  requestId: string;
+}
+
+const EditRequestForm = ({ requestId }: EditRequestFormProps) => {
   const { orgInfo } = useOutletContext<OrgInfoContext>();
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
-  const validation = usePlanValidation();
 
-  const {
-    isValidating,
-    isValid,
-    hasInsufficientFunds,
-    planConfig,
-    walletBalance,
-    error: validationError,
-  } = validation;
-
-  const form = useForm<NewRequestSchemaData>({
-    resolver: zodResolver(newRequestSchema),
-    mode: "onChange",
-    defaultValues: {},
+  const { data, isLoading } = useQuery<GetRequestByIdResponse>({
+    queryKey: ["request-details", requestId],
+    queryFn: () => getOrganisationsRequestById(requestId),
   });
+
+  const form = useForm<UpdateRequestSchemaData>({
+    resolver: zodResolver(updateRequestSchema),
+    mode: "onChange",
+  });
+
+  const defaultValues = useMemo(() => {
+    if (!data?.request) return null;
+
+    const { request } = data;
+    return {
+      title: request.title,
+      candidateRole: request.candidateRole,
+      requestRequirements: request.requestRequirements,
+      employmentType: request.employmentType,
+      workSchedule: request.workSchedule,
+      resumptionTime: request.resumptionTime || undefined,
+      closingTime: request.closingTime || undefined,
+      startDate: request.startDate ? new Date(request.startDate) : undefined,
+      endDate: request.endDate ? new Date(request.endDate) : undefined,
+      workHours: request.workHours || undefined,
+      workDays: request.workDays,
+      workSiteAddress: request.workSiteAddress || undefined,
+      modeOfWork: request.modeOfWork,
+      language: request.language || undefined,
+      genderPreference: request.genderPreference || undefined,
+    };
+  }, [data]);
+
+  useMemo(() => {
+    if (defaultValues && !form.formState.isDirty) {
+      form.reset(defaultValues);
+    }
+  }, [defaultValues, form]);
 
   const employmentType = form.watch("employmentType");
   const workSchedule = form.watch("workSchedule");
@@ -55,34 +85,27 @@ const NewRequestForm = () => {
   const isShifts = workSchedule === "shifts";
 
   const requestMutation = useMutation({
-    mutationFn: createCandidateRequest,
-
+    mutationFn: (updateData: UpdateRequestSchemaData) =>
+      updateOrganisationsRequest(requestId, updateData),
     onSuccess: (data) => {
       setError(null);
-
       toast.success(data.message);
-
       navigate("/dashboard/requests", { replace: true });
     },
-
     onError: (error) => {
-      const errorMessage = getErrorMessage(error, "Failed to create request");
+      const errorMessage = getErrorMessage(error, "Failed to update request");
       setError(errorMessage);
     },
   });
 
-  const handleSubmit = async (values: NewRequestSchemaData) => {
-    if (!planConfig || hasInsufficientFunds) {
-      return;
-    }
-
+  const handleSubmit = async (values: UpdateRequestSchemaData) => {
     try {
       setError(null);
 
       const formDataWithPlan = {
         ...values,
-        selectedPlan: planConfig.id,
-        planCost: planConfig.price,
+        selectedPlan: data?.request.selectedPlan,
+        planCost: data?.request.planCost,
       };
 
       await requestMutation.mutateAsync(formDataWithPlan);
@@ -91,7 +114,7 @@ const NewRequestForm = () => {
     }
   };
 
-  if (isValidating) {
+  if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
         <div className="text-center space-y-2">
@@ -99,41 +122,15 @@ const NewRequestForm = () => {
             <div className="absolute inset-0 rounded-full border-4 border-indigo-200"></div>
             <div className="absolute inset-0 rounded-full border-4 border-indigo-600 border-t-transparent animate-spin"></div>
           </div>
-          <p className="text-gray-600">Validating plan and wallet...</p>
+          <p className="text-gray-600">Loading request details...</p>
         </div>
-      </div>
-    );
-  }
-
-  if (validationError) {
-    return (
-      <div className="flex items-center justify-center min-h-[400px]">
-        <Alert className="max-w-md">
-          <AlertCircle className="h-4 w-4" />
-          <AlertDescription className="ml-2">
-            {validationError}
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => navigate("/dashboard/requests")}
-              className="ml-4"
-            >
-              Back to Requests
-            </Button>
-          </AlertDescription>
-        </Alert>
       </div>
     );
   }
 
   return (
     <div className="space-y-6">
-      <RequestPlanStatus
-        planConfig={planConfig}
-        walletBalance={walletBalance}
-        isValid={isValid}
-        hasInsufficientFunds={hasInsufficientFunds}
-      />
+      {data?.request && <RequestEscrowInfo request={data.request} />}
 
       <Form {...form}>
         <form className="space-y-5" onSubmit={form.handleSubmit(handleSubmit)}>
@@ -143,14 +140,14 @@ const NewRequestForm = () => {
               name="title"
               label="Request Title"
               placeholder="e.g Request for 5 audit managers"
-              isDisabled={hasInsufficientFunds}
+              isDisabled={data?.request.status !== "submitted"}
             />
             <RequestTextInput
               control={form.control}
               name="candidateRole"
               label="Candidate Role"
               placeholder="e.g Audit Manager"
-              isDisabled={hasInsufficientFunds}
+              isDisabled={data?.request.status !== "submitted"}
             />
             <div className="col-span-2">
               <RequestTextAreaInput
@@ -158,7 +155,7 @@ const NewRequestForm = () => {
                 name="requestRequirements"
                 label="Request Requirements"
                 placeholder="Describe your request requirements here..."
-                isDisabled={hasInsufficientFunds || requestMutation.isPending}
+                isDisabled={data?.request.status !== "submitted"}
               />
             </div>
             <RequestSelectInput
@@ -170,7 +167,7 @@ const NewRequestForm = () => {
                 { label: "Part Time", value: "part-time" },
                 { label: "Contract", value: "contract" },
               ]}
-              isDisabled={hasInsufficientFunds || requestMutation.isPending}
+              isDisabled={data?.request.status !== "submitted"}
             />
             <RequestSelectInput
               control={form.control}
@@ -181,7 +178,7 @@ const NewRequestForm = () => {
                 { label: "Remote", value: "remote" },
                 { label: "Hybrid", value: "hybrid" },
               ]}
-              isDisabled={hasInsufficientFunds || requestMutation.isPending}
+              isDisabled={data?.request.status !== "submitted"}
             />
             <RequestSelectInput
               control={form.control}
@@ -191,14 +188,14 @@ const NewRequestForm = () => {
                 { label: "Office Hours", value: "office-hours" },
                 { label: "Shifts", value: "shifts" },
               ]}
-              isDisabled={hasInsufficientFunds || requestMutation.isPending}
+              isDisabled={data?.request.status !== "submitted"}
             />
             <RequestDateInput
               control={form.control}
               name="startDate"
               label="Start Date"
               placeholder="Select start date"
-              isDisabled={hasInsufficientFunds || requestMutation.isPending}
+              isDisabled={data?.request.status !== "submitted"}
             />
             <RequestDateInput
               control={form.control}
@@ -206,7 +203,7 @@ const NewRequestForm = () => {
               label={`End Date ${isEndDateRequired ? "*" : "(Optional)"}`}
               placeholder="Select end date"
               isDisabled={
-                hasInsufficientFunds ||
+                data?.request.status !== "submitted" ||
                 isEndDateDisabled ||
                 requestMutation.isPending
               }
@@ -216,14 +213,14 @@ const NewRequestForm = () => {
               name="workDays"
               label="Work Days"
               placeholder="Mondays - Fridays"
-              isDisabled={hasInsufficientFunds || requestMutation.isPending}
+              isDisabled={data?.request.status !== "submitted"}
             />
             <RequestTimeInput
               control={form.control}
               name="resumptionTime"
-              label={`Resumption Time ${isOfficeHours ? "*" : ""}`}
+              label="Resumption Time"
               disabled={
-                hasInsufficientFunds ||
+                data?.request.status !== "submitted" ||
                 !isOfficeHours ||
                 requestMutation.isPending
               }
@@ -233,7 +230,7 @@ const NewRequestForm = () => {
               name="closingTime"
               label={`Closing Time ${isOfficeHours ? "*" : ""}`}
               disabled={
-                hasInsufficientFunds ||
+                data?.request.status !== "submitted" ||
                 !isOfficeHours ||
                 requestMutation.isPending
               }
@@ -244,7 +241,9 @@ const NewRequestForm = () => {
               label={`Work Hours ${isShifts ? "*" : ""}`}
               placeholder="e.g 9.00AM - 5.00PM"
               isDisabled={
-                hasInsufficientFunds || !isShifts || requestMutation.isPending
+                data?.request.status !== "submitted" ||
+                !isShifts ||
+                requestMutation.isPending
               }
             />
 
@@ -252,14 +251,14 @@ const NewRequestForm = () => {
               control={form.control}
               name="workSiteAddress"
               label="Work Address"
-              isDisabled={hasInsufficientFunds || requestMutation.isPending}
+              isDisabled={data?.request.status !== "submitted"}
             />
             <RequestTextInput
               control={form.control}
               name="language"
               label="Language"
               placeholder="e.g. English, Spanish"
-              isDisabled={hasInsufficientFunds || requestMutation.isPending}
+              isDisabled={data?.request.status !== "submitted"}
             />
             <RequestSelectInput
               control={form.control}
@@ -270,11 +269,17 @@ const NewRequestForm = () => {
                 { label: "Male", value: "male" },
                 { label: "Female", value: "female" },
               ]}
-              isDisabled={hasInsufficientFunds || requestMutation.isPending}
+              isDisabled={
+                data?.request.status !== "submitted" ||
+                requestMutation.isPending
+              }
             />
             <div className="col-span-2">
               <MultiDocumentUpload
-                isDisabled={hasInsufficientFunds || requestMutation.isPending}
+                isDisabled={
+                  data?.request.status !== "submitted" ||
+                  requestMutation.isPending
+                }
                 organisation={orgInfo.organisation}
                 onUploadSuccess={() => {}}
               />
@@ -295,10 +300,18 @@ const NewRequestForm = () => {
               type="submit"
               className="h-10 rounded-full bg-indigo-700 hover:bg-indigo-800"
               disabled={
-                hasInsufficientFunds || requestMutation.isPending || !isValid
+                data?.request.status !== "submitted" ||
+                requestMutation.isPending
               }
             >
-              {requestMutation.isPending ? "Submitting..." : "Submit Request"}
+              {requestMutation.isPending ? (
+                <>
+                  <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                  Submitting...
+                </>
+              ) : (
+                "Submit Request"
+              )}
             </Button>
 
             <Button
@@ -316,4 +329,4 @@ const NewRequestForm = () => {
   );
 };
 
-export default NewRequestForm;
+export default EditRequestForm;

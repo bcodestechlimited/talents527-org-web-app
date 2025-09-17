@@ -18,11 +18,13 @@ const Navbar = ({ url }: NavbarProps) => {
   const navigate = useNavigate();
 
   return (
-    <div className="w-full h-[70px] flex items-center transition-all duration-300 border-b">
+    <div
+      className="w-full h-[70px] flex items-center transition-all duration-300 border-b 
+                    bg-white sticky top-0 z-50"
+    >
       <div className="w-full relative px-2 lg:p-0 md:ml-0 ml-auto">
         <div className="flex items-center justify-between px-2">
           <PanelLeft />
-
           <div className="flex items-center space-x-2">
             {auth && (
               <DropdownMenu>

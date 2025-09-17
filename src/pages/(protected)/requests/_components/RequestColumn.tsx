@@ -12,16 +12,19 @@ export const RequestColumn: ColumnDef<Request>[] = [
     cell: ({ row }) => <div className="pl-2">{row.original.title}</div>,
   },
   {
-    accessorKey: "jobRole",
-    header: () => <div className="pl-2">Job Role Requested</div>,
+    accessorKey: "candidateRole",
+    header: () => <div className="pl-2">Role Requested</div>,
     cell: ({ row }) => <div className="pl-2">{row.original.candidateRole}</div>,
   },
   {
     accessorKey: "assignedTo",
-    header: () => <div className="pl-2">Number of Staff Needed</div>,
-    cell: ({ row }) => (
-      <div className="pl-2">{row.original.numberOfCandidates}</div>
-    ),
+    header: () => <div className="pl-2">Selected Plan</div>,
+    cell: ({ row }) => <div className="pl-2 capitalize">{row.original.selectedPlan}</div>,
+  },
+  {
+    accessorKey: "planCost",
+    header: () => <div className="pl-2">Plan Cost</div>,
+    cell: ({ row }) => <div className="pl-2">₦{row.original.planCost.toLocaleString()}</div>,
   },
   {
     accessorKey: "status",
@@ -33,7 +36,7 @@ export const RequestColumn: ColumnDef<Request>[] = [
         <div className="pl-2">
           <Badge
             variant="outline"
-            className={`px-3 py-1 text-sm rounded border-none ${
+            className={`px-3 py-1 text-sm rounded-full font-normal capitalize border-none ${
               status === "submitted"
                 ? "bg-sky-100 text-royalblue"
                 : status === "in-progress"
@@ -42,7 +45,9 @@ export const RequestColumn: ColumnDef<Request>[] = [
                 ? "bg-emerald-100 text-emerald-600"
                 : "bg-rose-100 text-rose-600"
             }`}
-          ></Badge>
+          >
+            {status}
+          </Badge>
         </div>
       );
     },

@@ -1,5 +1,6 @@
 import { Loader2, Database, RefreshCw } from "lucide-react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Button } from "../ui/button";
 
 interface DataLoaderProps {
   isLoading: boolean;
@@ -186,13 +187,14 @@ const ErrorState = ({
       <p className="text-sm text-red-600 mt-1 max-w-md">{error}</p>
     </div>
     {retryAction && (
-      <button
+      <Button
         onClick={retryAction}
-        className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
+        variant="outline"
+        className="rounded-full"
       >
-        <RefreshCw className="w-4 h-4 mr-2" />
+        <RefreshCw className="w-4 h-4" />
         Try Again
-      </button>
+      </Button>
     )}
   </div>
 );

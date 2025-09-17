@@ -1,33 +1,47 @@
-import * as z from "zod";
+import { z } from "zod";
 
-export const newRequestSchema = z
-  .object({
-    title: z.string().min(1, { message: "Title is required" }),
-    candidateRole: z.string().min(1, { message: "Candidate role is required" }),
-    requestRequirements: z
-      .string()
-      .min(1, { message: "Request requirements is required" }),
-    employmentType: z.enum(["full-time", "part-time", "contract"], {
-      message: "Employment type is required",
-    }),
-    workSchedule: z.enum(["office-hours", "shifts"], {
-      message: "Work schedule is required",
-    }),
-    resumptionTime: z.string().optional(),
-    closingTime: z.string().optional(),
-    startDate: z.date({ message: "Start date is required" }),
-    endDate: z.date().optional(),
-    workHours: z.string().optional(),
-    workDays: z.string().min(1, { message: "Work days is required" }),
-    workSiteAddress: z.string().optional(),
-    modeOfWork: z.enum(["on-site", "remote", "hybrid"], {
-      message: "Mode of work is required",
-    }),
-    language: z.string().optional(),
-    genderPreference: z.enum(["no-preference", "male", "female"]).optional(),
-    specialNote: z.string().optional(),
-    documents: z.array(z.string()).optional(),
-  })
+const baseRequestSchema = z.object({
+  planCost: z.number().min(1, { message: "Plan cost is required" }),
+  selectedPlan: z.enum(["basic", "standard", "enterprise"]),
+  title: z
+    .string({ required_error: "Title is required" })
+    .min(1, { message: "Title is required" }),
+  candidateRole: z
+    .string({ required_error: "Candidate role is required" })
+    .min(1, { message: "Candidate role is required" }),
+  requestRequirements: z
+    .string({ required_error: "Request requirements is required" })
+    .min(1, { message: "Request requirements is required" }),
+  employmentType: z.enum(["full-time", "part-time", "contract"], {
+    message: "Employment type is required",
+  }),
+  workSchedule: z.enum(["office-hours", "shifts"], {
+    message: "Work schedule is required",
+  }),
+  resumptionTime: z.string().optional(),
+  closingTime: z.string().optional(),
+  startDate: z.coerce.date({ message: "Start date is required" }),
+  endDate: z.coerce.date().optional(),
+  workHours: z.string().optional(),
+  workDays: z
+    .string({ required_error: "Work days is required" })
+    .min(1, { message: "Work days is required" }),
+  workSiteAddress: z
+    .string({ required_error: "Work site address is required" })
+    .min(1, { message: "Work site address is required" }),
+  modeOfWork: z.enum(["on-site", "remote", "hybrid"], {
+    message: "Mode of work is required",
+  }),
+  language: z
+    .string({ required_error: "Language is required" })
+    .min(1, { message: "Language is required" }),
+  genderPreference: z.enum(["no-preference", "male", "female"], {
+    message: "Gender preference is required",
+  }),
+  documents: z.array(z.string()).optional(),
+});
+
+export const newRequestSchema = baseRequestSchema
   .refine(
     (data) => {
       if (data.employmentType === "contract") {
@@ -70,4 +84,12 @@ export const newRequestSchema = z
     }
   );
 
+export const updateRequestSchema = baseRequestSchema
+  .omit({
+    selectedPlan: true,
+    planCost: true,
+  })
+  .partial();
+
 export type NewRequestSchemaData = z.infer<typeof newRequestSchema>;
+export type UpdateRequestSchemaData = z.infer<typeof updateRequestSchema>;

@@ -18,6 +18,7 @@ import SetupPage from "./pages/(protected)/setup/setup";
 import OtpPage from "./pages/auth/otp";
 import SetupLayout from "./components/layouts/dashboard/Setup";
 import NewRequestsPage from "./pages/(protected)/requests/new-request";
+import RequestDetailsPage from "./pages/(protected)/requests/request-details";
 
 function App() {
   const queryClient = new QueryClient();
@@ -41,6 +42,10 @@ function App() {
               <Route path="candidates" element={<CandidatesPage />} />
               <Route path="requests" element={<RequestsPage />} />
               <Route path="requests/new" element={<NewRequestsPage />} />
+              <Route
+                path="requests/:requestId"
+                element={<RequestDetailsPage />}
+              />
               <Route path="wallet" element={<WalletPage />} />
             </Route>
           </Route>

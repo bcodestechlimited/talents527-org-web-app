@@ -16,7 +16,6 @@ const RequestsPage = () => {
   const navigate = useNavigate();
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [selectedPlan, setSelectedPlan] = useState<PlanType | null>(null);
   const [searchParams, setSearchParams] = useSearchParams();
   const [searchValue, setSearchValue] = useState(
     searchParams.get("search") || ""
@@ -90,9 +89,7 @@ const RequestsPage = () => {
   );
 
   const handlePlanSelect = (plan: PlanType) => {
-    setSelectedPlan(plan);
     navigate(`new?plan=${plan}`);
-    console.log(`Selected plan: ${plan}, navigating to job creation page...`);
   };
 
   const handleOpenDialog = () => {
@@ -118,7 +115,7 @@ const RequestsPage = () => {
       >
         <DataTable<Request, unknown>
           columns={RequestColumn}
-          data={[]}
+          data={data?.data?.requests || []}
           searchValue={debouncedSearchValue}
           paginationMeta={{
             page: currentPage,
