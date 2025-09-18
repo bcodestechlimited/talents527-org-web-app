@@ -16,6 +16,7 @@ type Props<T extends FieldValues> = {
   placeholder?: string;
   required?: boolean;
   rows?: number;
+  isDisabled?: boolean;
 };
 
 export const FormTextAreaInput = <T extends FieldValues>({
@@ -23,7 +24,7 @@ export const FormTextAreaInput = <T extends FieldValues>({
   name,
   label,
   placeholder,
-  required = true,
+  isDisabled = false,
   rows = 4,
 }: Props<T>) => {
   return (
@@ -31,21 +32,13 @@ export const FormTextAreaInput = <T extends FieldValues>({
       control={control}
       name={name}
       render={({ field }) => (
-        <FormItem className="gap-0">
-          <FormLabel className="flex items-center gap-0">
-            <span>{label}</span>
-            <span
-              className={`text-base ${
-                required ? "text-rose-400" : "text-white"
-              }`}
-            >
-              &#42;{" "}
-            </span>
-          </FormLabel>
+        <FormItem className="gap-1">
+          <FormLabel className="font-normal">{label}</FormLabel>
           <FormControl>
             <Textarea
+              disabled={isDisabled}
               {...field}
-              className="px-4 text-lg rounded min-h-[100px]"
+              className="px-4 text-lg rounded-lg min-h-[100px]"
               placeholder={placeholder}
               rows={rows}
             />

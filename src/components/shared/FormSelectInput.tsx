@@ -38,9 +38,7 @@ export const FormSelectInput = <T extends FieldValues>({
     name={name}
     render={({ field }) => (
       <FormItem className="gap-1">
-        <FormLabel>
-          <span>{label}</span>
-        </FormLabel>
+        <FormLabel className="font-normal">{label}</FormLabel>
         <FormControl>
           <Select
             disabled={isDisabled}

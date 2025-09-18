@@ -8,10 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useState, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate, useOutletContext } from "react-router";
-import { RequestTextInput } from "./RequestTextInput";
-import { RequestSelectInput } from "./RequestSelectInput";
-import { RequestTimeInput } from "./RequestTimeInput";
-import { RequestDateInput } from "./RequestDateInput";
+
 import MultiDocumentUpload from "./RequestDocumentUpload";
 import type { OrgInfoContext } from "@/types/contexts";
 import { Button } from "@/components/ui/button";
@@ -23,9 +20,19 @@ import {
   getOrganisationsRequestById,
   updateOrganisationsRequest,
 } from "@/services/requests.service";
-import { RequestTextAreaInput } from "./RequestTextAreaInput";
 import type { GetRequestByIdResponse } from "@/types/requests";
 import RequestEscrowInfo from "./RequestEscrowInfo";
+import { FormTextInput } from "@/components/shared/FormTextInput";
+import { FormTextAreaInput } from "@/components/shared/FormTextAreaInput";
+import { FormSelectInput } from "@/components/shared/FormSelectInput";
+import { FormDateInput } from "@/components/shared/FormDateInput";
+import { FormTimeInput } from "@/components/shared/FormTimeInput";
+import {
+  employmentTypeOptions,
+  genderPreferenceOptions,
+  modeOfWorkOptions,
+  workScheduleOptions,
+} from "@/constants/requests";
 
 interface EditRequestFormProps {
   requestId: string;
@@ -135,14 +142,14 @@ const EditRequestForm = ({ requestId }: EditRequestFormProps) => {
       <Form {...form}>
         <form className="space-y-5" onSubmit={form.handleSubmit(handleSubmit)}>
           <div className="grid grid-cols-2 gap-5">
-            <RequestTextInput
+            <FormTextInput
               control={form.control}
               name="title"
               label="Request Title"
               placeholder="e.g Request for 5 audit managers"
               isDisabled={data?.request.status !== "submitted"}
             />
-            <RequestTextInput
+            <FormTextInput
               control={form.control}
               name="candidateRole"
               label="Candidate Role"
@@ -150,7 +157,7 @@ const EditRequestForm = ({ requestId }: EditRequestFormProps) => {
               isDisabled={data?.request.status !== "submitted"}
             />
             <div className="col-span-2">
-              <RequestTextAreaInput
+              <FormTextAreaInput
                 control={form.control}
                 name="requestRequirements"
                 label="Request Requirements"
@@ -158,46 +165,35 @@ const EditRequestForm = ({ requestId }: EditRequestFormProps) => {
                 isDisabled={data?.request.status !== "submitted"}
               />
             </div>
-            <RequestSelectInput
+            <FormSelectInput
               control={form.control}
               name="employmentType"
               label="Employment Type"
-              options={[
-                { label: "Full Time", value: "full-time" },
-                { label: "Part Time", value: "part-time" },
-                { label: "Contract", value: "contract" },
-              ]}
+              options={employmentTypeOptions}
               isDisabled={data?.request.status !== "submitted"}
             />
-            <RequestSelectInput
+            <FormSelectInput
               control={form.control}
               name="modeOfWork"
               label="Mode of Work"
-              options={[
-                { label: "On-site", value: "on-site" },
-                { label: "Remote", value: "remote" },
-                { label: "Hybrid", value: "hybrid" },
-              ]}
+              options={modeOfWorkOptions}
               isDisabled={data?.request.status !== "submitted"}
             />
-            <RequestSelectInput
+            <FormSelectInput
               control={form.control}
               name="workSchedule"
               label="Work Schedule"
-              options={[
-                { label: "Office Hours", value: "office-hours" },
-                { label: "Shifts", value: "shifts" },
-              ]}
+              options={workScheduleOptions}
               isDisabled={data?.request.status !== "submitted"}
             />
-            <RequestDateInput
+            <FormDateInput
               control={form.control}
               name="startDate"
               label="Start Date"
               placeholder="Select start date"
               isDisabled={data?.request.status !== "submitted"}
             />
-            <RequestDateInput
+            <FormDateInput
               control={form.control}
               name="endDate"
               label={`End Date ${isEndDateRequired ? "*" : "(Optional)"}`}
@@ -208,14 +204,14 @@ const EditRequestForm = ({ requestId }: EditRequestFormProps) => {
                 requestMutation.isPending
               }
             />
-            <RequestTextInput
+            <FormTextInput
               control={form.control}
               name="workDays"
               label="Work Days"
               placeholder="Mondays - Fridays"
               isDisabled={data?.request.status !== "submitted"}
             />
-            <RequestTimeInput
+            <FormTimeInput
               control={form.control}
               name="resumptionTime"
               label="Resumption Time"
@@ -225,7 +221,7 @@ const EditRequestForm = ({ requestId }: EditRequestFormProps) => {
                 requestMutation.isPending
               }
             />
-            <RequestTimeInput
+            <FormTimeInput
               control={form.control}
               name="closingTime"
               label={`Closing Time ${isOfficeHours ? "*" : ""}`}
@@ -235,7 +231,7 @@ const EditRequestForm = ({ requestId }: EditRequestFormProps) => {
                 requestMutation.isPending
               }
             />
-            <RequestTextInput
+            <FormTextInput
               control={form.control}
               name="workHours"
               label={`Work Hours ${isShifts ? "*" : ""}`}
@@ -247,28 +243,24 @@ const EditRequestForm = ({ requestId }: EditRequestFormProps) => {
               }
             />
 
-            <RequestTextInput
+            <FormTextInput
               control={form.control}
               name="workSiteAddress"
               label="Work Address"
               isDisabled={data?.request.status !== "submitted"}
             />
-            <RequestTextInput
+            <FormTextInput
               control={form.control}
               name="language"
               label="Language"
               placeholder="e.g. English, Spanish"
               isDisabled={data?.request.status !== "submitted"}
             />
-            <RequestSelectInput
+            <FormSelectInput
               control={form.control}
               name="genderPreference"
               label="Gender Preference"
-              options={[
-                { label: "No Preference", value: "no-preference" },
-                { label: "Male", value: "male" },
-                { label: "Female", value: "female" },
-              ]}
+              options={genderPreferenceOptions}
               isDisabled={
                 data?.request.status !== "submitted" ||
                 requestMutation.isPending

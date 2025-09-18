@@ -1,5 +1,11 @@
 import z from "zod";
 
+export const userUpdateSchema = z.object({
+  firstname: z.string().min(2, { message: "First name is required" }),
+  lastname: z.string().min(2, { message: "Last name is required" }),
+  email: z.string().email({ message: "Invalid email address" }),
+});
+
 export const buildOrgSchema = z.object({
   orgName: z.string().min(2, {
     message: "Org. name is required",
@@ -37,3 +43,8 @@ export const socialsOrgSchema = z.object({
 export const orgSetupSchema = buildOrgSchema
   .merge(aboutOrgSchema)
   .merge(socialsOrgSchema);
+
+export const updateProfileSchema = z.object({
+  user: userUpdateSchema.partial(),
+  organisation: orgSetupSchema.partial(),
+});

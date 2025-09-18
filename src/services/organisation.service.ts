@@ -3,9 +3,36 @@ import type {
   CreateOrgData,
   CreateOrgResponse,
   FetchOrgResponse,
+  UpdateOrganisationData,
+  UpdateOrganisationResponse,
 } from "@/types/organisation";
 import axios from "axios";
 import { useUserStore } from "@/store/user.store";
+
+export const updateOrganisation = async (
+  data: UpdateOrganisationData
+): Promise<UpdateOrganisationResponse> => {
+  try {
+    const token = useUserStore.getState().token;
+
+    const response = await axiosInstance.patch<UpdateOrganisationResponse>(
+      `/organisations/update`,
+      data,
+      {
+        headers: {
+          Authorization: token ? `Bearer ${token}` : "",
+        },
+      }
+    );
+
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      throw error.response?.data || error;
+    }
+    throw new Error("An unexpected error occurred");
+  }
+};
 
 export const createOrganisation = async (
   data: CreateOrgData

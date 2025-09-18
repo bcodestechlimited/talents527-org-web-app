@@ -70,7 +70,7 @@ export const FormOtpInput = <T extends FieldValues>({
       name={name}
       render={({ field }) => (
         <FormItem className="gap-3">
-          <FormLabel className="flex justify-center">{label}</FormLabel>
+          <FormLabel className="font-normal">{label}</FormLabel>
           <FormControl>
             <>
               <Input type="hidden" {...field} />

@@ -4,7 +4,7 @@ import { useMemo } from "react";
 
 import countriesData from "@/data/countries.json";
 import type { User } from "@/types/user";
-import LogoUpload from "@/components/shared/LogoUpload";
+import LogoUpload from "@/components/shared/TempLogoUpload";
 import { FormTextAreaInput } from "@/components/shared/FormTextAreaInput";
 import { FormSelectInput } from "@/components/shared/FormSelectInput";
 import { FormTextInput } from "@/components/shared/FormTextInput";

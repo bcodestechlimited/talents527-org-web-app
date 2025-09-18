@@ -5,7 +5,7 @@ import {
   Video,
   CircleDollarSign,
   BriefcaseBusiness,
-  User,
+  Compass,
 } from "lucide-react";
 
 export const Sidebar = () => {
@@ -28,7 +28,7 @@ export const Sidebar = () => {
         <div className="p-2 flex flex-col space-y-1 overflow-y-auto">
           <SidebarItem
             label="Profile"
-            icon={User}
+            icon={Compass}
             isActive={pathname === "/dashboard"}
             onClick={() => navigate("/dashboard")}
           />

@@ -6,46 +6,12 @@ import type { UseFormReturn } from "react-hook-form";
 import type z from "zod";
 import type { orgSetupSchema } from "@/schemas/organisation.schema";
 import { itemVariants } from "@/animations/setup";
-
-const roleOptions = [
-  { label: "Owner", value: "OWNER" },
-  { label: "Manager", value: "MANAGER" },
-  { label: "Employee", value: "EMPLOYEE" },
-];
-
-const industryOptions = [
-  { label: "Technology", value: "TECHNOLOGY" },
-  { label: "Finance", value: "FINANCE" },
-  { label: "Healthcare", value: "HEALTHCARE" },
-  { label: "Education", value: "EDUCATION" },
-];
-
-const orgTypeOptions = [
-  {
-    label: "Sole Proprietorship",
-    value: "SOLE_PROPRIETORSHIP",
-  },
-  {
-    label: "Partnership",
-    value: "PARTNERSHIP",
-  },
-  {
-    label: "Private Limited",
-    value: "PRIVATE_LIMITED",
-  },
-  {
-    label: "Corporation",
-    value: "CORPORATION",
-  },
-];
-
-const orgSizeOptions = [
-  { label: "Startup (1-10)", value: "STARTUP" },
-  { label: "Small (11-50)", value: "SMALL" },
-  { label: "Medium (51-200)", value: "MEDIUM" },
-  { label: "Large (201-1000)", value: "LARGE" },
-  { label: "Enterprise (1000+)", value: "ENTERPRISE" },
-];
+import {
+  industryOptions,
+  orgSizeOptions,
+  orgTypeOptions,
+  roleOptions,
+} from "@/constants/organisation";
 
 type StepProps = {
   form: UseFormReturn<z.infer<typeof orgSetupSchema>>;

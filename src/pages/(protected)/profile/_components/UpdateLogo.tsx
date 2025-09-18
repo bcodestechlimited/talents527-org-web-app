@@ -1,37 +1,38 @@
 import { useState, useRef, type ChangeEvent } from "react";
-import { Camera, X, Check, Upload } from "lucide-react";
+import { X, Check, Upload } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { getErrorMessage } from "@/lib/errorHandler";
-import { uploadLogo } from "@/services/upload.service";
-import type { User } from "@/types/user";
+import { updateOrganisationLogo } from "@/services/upload.service";
+import type { Organisation } from "@/types/organisation";
+import { toast } from "sonner";
 
-interface LogoUploadProps {
-  user: User;
-  onUploadSuccess: () => void;
+interface UpdateLogoProps {
+  organisation: Organisation;
 }
 
-export default function LogoUpload({ user, onUploadSuccess }: LogoUploadProps) {
+export default function UpdateLogo({ organisation }: UpdateLogoProps) {
+  const queryClient = useQueryClient();
+
   const [previewImage, setPreviewImage] = useState<string>("");
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isUploading, setIsUploading] = useState(false);
   const [progress, setProgress] = useState(0);
   const [error, setError] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
-
-
 
   const uploadMutation = useMutation({
     mutationFn: async (file: File) => {
       const formData = new FormData();
       formData.append("logo", file);
 
-      return uploadLogo(formData);
+      return updateOrganisationLogo(formData);
     },
-    onSuccess: () => {
-      // console.log("Upload successful:", data);
+    onSuccess: (data) => {
       setIsUploading(false);
       setPreviewImage("");
+      setSelectedFile(null);
       setProgress(0);
       setError(null);
 
@@ -39,7 +40,10 @@ export default function LogoUpload({ user, onUploadSuccess }: LogoUploadProps) {
         inputRef.current.value = "";
       }
 
-      onUploadSuccess();
+      toast.success(data.message);
+      queryClient.invalidateQueries({
+        queryKey: ["organisation-info"],
+      });
     },
     onError: (error: unknown) => {
       console.error("Upload failed:", error);
@@ -63,6 +67,9 @@ export default function LogoUpload({ user, onUploadSuccess }: LogoUploadProps) {
         return;
       }
 
+      // Store the original file
+      setSelectedFile(file);
+
       const reader = new FileReader();
       reader.onload = () => {
         setPreviewImage(reader.result as string);
@@ -76,6 +83,7 @@ export default function LogoUpload({ user, onUploadSuccess }: LogoUploadProps) {
   const handleCancel = () => {
     setIsUploading(false);
     setPreviewImage("");
+    setSelectedFile(null);
     setError(null);
     setProgress(0);
     if (inputRef.current) {
@@ -84,11 +92,7 @@ export default function LogoUpload({ user, onUploadSuccess }: LogoUploadProps) {
   };
 
   const handleSave = async () => {
-    if (!previewImage) return;
-
-    const response = await fetch(previewImage);
-    const blob = await response.blob();
-    const file = new File([blob], "company-logo.jpg", { type: blob.type });
+    if (!selectedFile) return;
 
     setProgress(0);
     const progressInterval = setInterval(() => {
@@ -102,7 +106,7 @@ export default function LogoUpload({ user, onUploadSuccess }: LogoUploadProps) {
     }, 200);
 
     try {
-      await uploadMutation.mutateAsync(file);
+      await uploadMutation.mutateAsync(selectedFile); // Upload the original file
       setProgress(100);
       setTimeout(() => clearInterval(progressInterval), 100);
     } catch (error) {
@@ -118,11 +122,6 @@ export default function LogoUpload({ user, onUploadSuccess }: LogoUploadProps) {
 
   return (
     <div className="space-y-4">
-      <label className="flex items-center gap-0 text-slate-950">
-        <span>Company Logo</span>
-        <span className="text-base text-rose-400">&#42;</span>
-      </label>
-
       <Input
         type="file"
         ref={inputRef}
@@ -131,36 +130,22 @@ export default function LogoUpload({ user, onUploadSuccess }: LogoUploadProps) {
         className="hidden"
       />
 
-      {user.logoId && !isUploading ? (
+      {organisation.logoId && !isUploading ? (
         <div className="flex space-x-2 items-center">
-          <div className="relative w-32 h-32">
+          <div className="relative w-20 h-20">
             <img
-              src={user.logoId.url}
-              alt="Company logo"
-              className="w-full h-full object-cover rounded-lg border-2"
+              src={organisation.logoId?.url}
+              alt="Organisation logo"
+              className="w-full h-full object-cover rounded-full border"
             />
+          </div>
+          <div className="flex-1 ml-4">
+            <p className="text-xs text-gray-500 mt-1">
+              {organisation?.logoId?.originalName}
+            </p>
             <Button
               type="button"
               variant="ghost"
-              size="sm"
-              className="absolute -top-2 -right-2 h-6 w-6 rounded-full bg-indigo-500 hover:bg-indigo-600 text-white p-0"
-              onClick={triggerFileInput}
-              title="Change logo"
-            >
-              <Camera className="h-3 w-3" />
-            </Button>
-          </div>
-          <div className="flex-1 ml-4">
-            <p className="text-sm text-indigo-600 font-medium flex items-center gap-1">
-              <Check className="h-4 w-4" />
-              Logo uploaded successfully
-            </p>
-            <p className="text-xs text-gray-500 mt-1">
-              {user.logoId.originalName}
-            </p>
-            <Button
-              type="button"
-              variant="outline"
               size="sm"
               className="mt-2 text-xs"
               onClick={triggerFileInput}
@@ -172,23 +157,26 @@ export default function LogoUpload({ user, onUploadSuccess }: LogoUploadProps) {
       ) : isUploading ? (
         <div className="space-y-3">
           <div className="flex space-x-3 items-center">
-            <div className="relative w-32 h-32">
+            <div className="relative w-20 h-20">
               <img
                 src={previewImage}
                 alt="Logo preview"
-                className="w-full h-full object-cover rounded-lg border-2 border-gray-200"
+                className="w-full h-full object-cover rounded-full border border-gray-200"
               />
               {uploadMutation.isPending && (
-                <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 rounded-lg">
+                <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 rounded-full">
                   <CircularProgress value={progress} />
                 </div>
               )}
             </div>
-            <div className="flex flex-col gap-2 flex-1">
+            <div className="flex flex-col gap-2">
+              {selectedFile && (
+                <p className="text-xs text-gray-500">{selectedFile.name}</p>
+              )}
               <Button
                 type="button"
-                variant="outline"
-                className="text-indigo1-600 hover:text-indigo1-700 border-indigo1-200"
+                variant="ghost"
+                className="text-indigo-600 text-sm hover:text-indigo-700"
                 onClick={handleSave}
                 disabled={uploadMutation.isPending}
               >
@@ -202,7 +190,7 @@ export default function LogoUpload({ user, onUploadSuccess }: LogoUploadProps) {
                 onClick={handleCancel}
                 disabled={uploadMutation.isPending}
               >
-                <X className="h-4 w-4 mr-1" />
+                <X className="h-4 w-4" />
                 Cancel
               </Button>
             </div>
@@ -221,18 +209,18 @@ export default function LogoUpload({ user, onUploadSuccess }: LogoUploadProps) {
           >
             <Upload className="h-8 w-8 text-gray-400 mb-2" />
             <span className="text-sm text-gray-500">
-              Click to select company logo
+              Click to select organisation logo
             </span>
             <span className="text-xs text-gray-400 mt-1">
               PNG, JPG up to 5MB
             </span>
           </div>
 
-          {!user.logoId && (
+          {!organisation.logoId && (
             <div className="bg-amber-50 border border-amber-200 rounded-lg p-3">
               <p className="text-sm text-amber-700">
-                <strong>Logo required:</strong> Please upload your company logo
-                to continue to the next step.
+                <strong>Logo required:</strong> Please upload your organisation
+                logo to continue to the next step.
               </p>
             </div>
           )}

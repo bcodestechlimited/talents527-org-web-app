@@ -18,7 +18,6 @@ interface DocumentFile {
 
 interface MultiDocumentUploadProps {
   organisation?: Organisation;
-  onUploadSuccess: () => void;
   maxFiles?: number;
   maxFileSize?: number;
   isDisabled?: boolean;
@@ -26,7 +25,6 @@ interface MultiDocumentUploadProps {
 
 export default function MultiDocumentUpload({
   organisation,
-  onUploadSuccess,
   maxFiles = 10,
   maxFileSize = 5,
   isDisabled = false,
@@ -53,7 +51,6 @@ export default function MultiDocumentUpload({
 
       setError(null);
 
-      // Invalidate the organisation query to refetch updated data
       queryClient.invalidateQueries({
         queryKey: ["organisation-info"],
       });
@@ -63,7 +60,6 @@ export default function MultiDocumentUpload({
         if (inputRef.current) {
           inputRef.current.value = "";
         }
-        onUploadSuccess();
       }, 1500);
     },
     onError: (error: unknown) => {

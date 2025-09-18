@@ -17,7 +17,7 @@ type Props<T extends FieldValues> = {
   disabled?: boolean;
 };
 
-export const RequestTimeInput = <T extends FieldValues>({
+export const FormTimeInput = <T extends FieldValues>({
   control,
   name,
   label,
@@ -40,7 +40,7 @@ export const RequestTimeInput = <T extends FieldValues>({
 
         return (
           <FormItem className="gap-1">
-            <FormLabel className="text-slate-500">{label}</FormLabel>
+            <FormLabel className="font-normal">{label}</FormLabel>
             <FormControl>
               <div className="flex items-center gap-2">
                 <Input
@@ -49,7 +49,7 @@ export const RequestTimeInput = <T extends FieldValues>({
                   value={timeValue}
                   onChange={handleTimeChange}
                   disabled={disabled}
-                  className="bg-background appearance-none [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none h-10 px-4 rounded-full"
+                  className="bg-background appearance-none [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none h-10 px-4"
                 />
               </div>
             </FormControl>

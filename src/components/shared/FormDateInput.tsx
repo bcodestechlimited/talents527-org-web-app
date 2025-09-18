@@ -24,7 +24,7 @@ type Props<T extends FieldValues> = {
   isDisabled?: boolean;
 };
 
-export const RequestDateInput = <T extends FieldValues>({
+export const FormDateInput = <T extends FieldValues>({
   control,
   name,
   label,
@@ -36,14 +36,14 @@ export const RequestDateInput = <T extends FieldValues>({
     name={name}
     render={({ field }) => (
       <FormItem className="gap-1">
-        <FormLabel className="text-slate-500">{label}</FormLabel>
+        <FormLabel className="font-normal">{label}</FormLabel>
         <FormControl>
           <Popover>
             <PopoverTrigger asChild>
               <Button
                 variant="outline"
                 disabled={isDisabled}
-                className={`h-10 w-full px-4 rounded-full justify-start text-left ${
+                className={`h-10 w-full px-4 justify-start text-left ${
                   !field.value && "text-muted-foreground"
                 } ${isDisabled && "opacity-50 cursor-not-allowed"}`}
               >

@@ -128,7 +128,7 @@ const SigninForm = () => {
               >
                 {signinMutation.isPending ? (
                   <>
-                    <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                    <Loader2 className="h-4 w-4 animate-spin" />
                     Please wait...
                   </>
                 ) : (

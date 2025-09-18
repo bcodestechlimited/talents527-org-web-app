@@ -48,7 +48,7 @@ export const FormTextInput = <T extends FieldValues>({
       name={name}
       render={({ field }) => (
         <FormItem className="gap-1">
-          <FormLabel className="">{label}</FormLabel>
+          <FormLabel className="font-normal">{label}</FormLabel>
           <FormControl>
             <div className="relative">
               <Input

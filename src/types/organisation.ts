@@ -44,6 +44,18 @@ export interface CreateOrgResponse {
   data: null;
 }
 
+export interface UpdateOrganisationData {
+  organisation?: Partial<Organisation>;
+  user?: Partial<User>;
+}
+
+export interface UpdateOrganisationResponse {
+  success: boolean;
+  message: string;
+  user: User;
+  organisation: Organisation;
+}
+
 export interface CreateOrgData {
   orgName: string;
   role: string;
