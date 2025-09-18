@@ -273,7 +273,6 @@ const EditRequestForm = ({ requestId }: EditRequestFormProps) => {
                   requestMutation.isPending
                 }
                 organisation={orgInfo.organisation}
-                onUploadSuccess={() => {}}
               />
             </div>
           </div>
@@ -287,10 +286,19 @@ const EditRequestForm = ({ requestId }: EditRequestFormProps) => {
             </Alert>
           )}
 
-          <div className="flex gap-3">
+          <div className="flex gap-1">
+            <Button
+              type="button"
+              variant="outline"
+              disabled={requestMutation.isPending}
+              onClick={() => navigate("/dashboard/requests")}
+              className="rounded-md"
+            >
+              Cancel
+            </Button>
             <Button
               type="submit"
-              className="h-10 rounded-full bg-indigo-700 hover:bg-indigo-800"
+              className="rounded-md bg-indigo-700 hover:bg-indigo-800"
               disabled={
                 data?.request.status !== "submitted" ||
                 requestMutation.isPending
@@ -298,21 +306,12 @@ const EditRequestForm = ({ requestId }: EditRequestFormProps) => {
             >
               {requestMutation.isPending ? (
                 <>
-                  <Loader2 className="h-4 w-4 animate-spin mr-2" />
-                  Submitting...
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  Please wait...
                 </>
               ) : (
-                "Submit Request"
+                "Update Request"
               )}
-            </Button>
-
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => navigate("/dashboard/requests")}
-              className="h-10 rounded-full"
-            >
-              Cancel
             </Button>
           </div>
         </form>

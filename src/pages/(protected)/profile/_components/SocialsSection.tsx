@@ -18,7 +18,7 @@ export const SocialsSection = ({
     <>
       <div className="flex">
         <div className="w-xs">
-          <h4 className="">Socials Profiles (Optional)</h4>
+          <h4 className="font-medium">Socials Profiles (Optional)</h4>
           <p className="text-sm text-gray-600">
             Update {orgName} socials profiles.
           </p>

@@ -14,7 +14,7 @@ export const OrganisationLogoSection = ({
     <>
       <div className="flex">
         <div className="w-xs">
-          <h4 className="">Organisation Logo</h4>
+          <h4 className="font-medium">Organisation Logo</h4>
           <p className="text-sm text-gray-600">Update {orgName} logo here.</p>
         </div>
 

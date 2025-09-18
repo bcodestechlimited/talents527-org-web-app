@@ -73,7 +73,7 @@ export const initNotificationService = (userId: string) => {
 
   socket.on("reconnect", (attemptNumber) => {
     console.log(
-      `🔄 Reconnected to notification service (attempt ${attemptNumber})`
+      `Reconnected to notification service (attempt ${attemptNumber})`
     );
     // Re-register user after reconnection
     socket?.emit("register", userId);
@@ -94,7 +94,7 @@ export const markNotificationAsRead = async (id: string) => {
   try {
     useNotificationStore.getState().markAsRead(id);
     socket?.emit("mark_notification_read", id);
-    await apiMarkNotificationAsRead(id); // ✅ call API, not self
+    await apiMarkNotificationAsRead(id);
   } catch (error) {
     console.error("Error marking notification as read:", error);
   }
@@ -103,7 +103,7 @@ export const markNotificationAsRead = async (id: string) => {
 export const markAllNotificationsAsRead = async () => {
   try {
     useNotificationStore.getState().markAllAsRead();
-    await apiMarkAllNotificationsAsRead(); // ✅ call API, not self
+    await apiMarkAllNotificationsAsRead();
   } catch (error) {
     console.error("Error marking all notifications as read:", error);
   }

@@ -84,7 +84,7 @@ const ProfileForm = ({ orgInfo }: ProfileFormProps) => {
       setError(null);
       await updateMutation.mutateAsync(values);
     } catch (error) {
-      console.error("Sigin error:", error);
+      console.error("Update error:", error);
       const errorMessage = getErrorMessage(
         error,
         "Failed to update organisation profile."

@@ -20,7 +20,7 @@ export const AdminInfoSection = ({
     <>
       <div className="flex">
         <div className="w-xs">
-          <h4 className="">Admin Information</h4>
+          <h4 className="font-medium">Admin Information</h4>
           <p className="text-sm text-gray-600">
             This is the admin for {orgName}.
           </p>

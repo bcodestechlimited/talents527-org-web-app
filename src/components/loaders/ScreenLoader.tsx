@@ -25,7 +25,7 @@ export const ScreenLoader = ({
 
           <div className="space-y-2">
             <motion.h2
-              className="text-xl font-semibold text-gray-900"
+              className="text-xl font-medium text-indigo-700"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.2 }}
@@ -33,7 +33,7 @@ export const ScreenLoader = ({
               {title}
             </motion.h2>
             <motion.p
-              className="text-gray-600"
+              className="text-slate-700 font-normal"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.4 }}

@@ -16,4 +16,5 @@ export interface User {
     assetType: string;
     entityType: string;
   };
+  isTwoFactorEnabled: boolean;
 }

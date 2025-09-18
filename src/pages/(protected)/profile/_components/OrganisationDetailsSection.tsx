@@ -57,7 +57,7 @@ export const OrganisationDetailsSection = ({
     <>
       <div className="flex">
         <div className="w-xs">
-          <h4 className="">Organisation Details</h4>
+          <h4 className="font-medium">Organisation Details</h4>
           <p className="text-sm text-gray-600">
             Update {orgName} details here.
           </p>

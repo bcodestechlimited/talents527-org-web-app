@@ -38,6 +38,20 @@ export interface FetchOrgResponse {
   organisation: Organisation;
 }
 
+export interface UserSettingsData {
+  name?: string;
+  isTwoFactorEnabled?: boolean;
+  email?: string;
+  password?: string;
+  newPassword?: string;
+}
+
+export interface UserSettingsResponse {
+  status_code: string;
+  success: boolean;
+  message: string;
+  user: User;
+}
 export interface CreateOrgResponse {
   status_code: string;
   message: string;
