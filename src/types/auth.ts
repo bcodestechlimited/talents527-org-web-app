@@ -29,12 +29,25 @@ export interface VerifyOtpResponse {
   token: string | null;
 }
 
-export interface SigninResponse {
-  status_code: string;
+export interface SigninSuccessResponse {
   message: string;
-  user: User | null;
-  token: string | null;
+  user: User;
+  token: string;
 }
+
+export interface SigninTwoFactorResponse {
+  message: string;
+  requiresTwoFactor: true;
+}
+
+export interface SigninEmailVerificationResponse {
+  message: string; // "Confirmation email sent!"
+}
+
+export type SigninResponse =
+  | SigninSuccessResponse
+  | SigninTwoFactorResponse
+  | SigninEmailVerificationResponse;
 
 export interface SignupResponse {
   status_code: string;
