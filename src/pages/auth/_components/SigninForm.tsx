@@ -58,6 +58,11 @@ const SigninForm = () => {
       }
 
       if ("user" in data && "token" in data) {
+        if (data.user.role !== "organisation") {
+          setError("Access denied: only organisations can sign in here.");
+          return;
+        }
+
         setError(null);
         setUser(data.user, data.token);
 

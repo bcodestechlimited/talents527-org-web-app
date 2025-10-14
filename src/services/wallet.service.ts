@@ -13,7 +13,7 @@ export const verifyPayment = async (
   const token = useUserStore.getState().token;
 
   try {
-    const response = await axiosInstance.get("/wallet/verify-payment", {
+    const response = await axiosInstance.get("/wallet/verify", {
       params: {
         reference,
       },
@@ -32,7 +32,7 @@ export const fetchWallet = async (): Promise<GetWalletResponse> => {
   try {
     const token = useUserStore.getState().token;
 
-    const response = await axiosInstance.get("/wallet/get-wallet", {
+    const response = await axiosInstance.get("/wallet", {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -54,7 +54,7 @@ export const addFunds = async (
     const token = useUserStore.getState().token;
 
     const response = await axiosInstance.post(
-      "/wallet/fund-wallet",
+      "/wallet/fund",
       { email, amount },
       {
         headers: {

@@ -1,13 +1,23 @@
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { useCallback, useEffect, useMemo } from "react";
+import { useMemo } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { addFunds } from "@/services/wallet.service";
-import { Loader2, X } from "lucide-react";
+import { Loader2 } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { formatCurrency } from "@/utils/formatCurrency";
 
 interface FundFormValues {
   email: string;
-  amount?: number | string;
+  amount: string;
 }
 
 interface AddFundsModalProps {
@@ -20,58 +30,54 @@ interface AddFundsModalProps {
 export const AddFundsModal = ({
   isOpen,
   onClose,
+  onSuccess,
   defaultEmail,
 }: AddFundsModalProps) => {
-  const handleClose = useCallback(() => {
-    onClose();
-  }, [onClose]);
-
   const {
     register,
     handleSubmit,
     formState: { errors },
     watch,
     setValue,
+    reset,
   } = useForm<FundFormValues>({
     defaultValues: { email: defaultEmail, amount: "" },
   });
 
   const amount = watch("amount");
 
-  const { charge, netAmount } = useMemo(() => {
-    const numericAmount =
-      typeof amount === "string"
-        ? amount === ""
-          ? 0
-          : parseFloat(amount)
-        : amount || 0;
+  const { charge, netAmount, numericAmount } = useMemo(() => {
+    const parsedAmount = amount === "" ? 0 : parseFloat(amount);
+    const calculatedCharge = Math.min(parsedAmount * 0.035, 2000);
 
-    const calculatedCharge = Math.min(numericAmount * 0.035, 2000);
     return {
+      numericAmount: parsedAmount,
       charge: calculatedCharge,
-      netAmount: numericAmount - calculatedCharge,
+      netAmount: parsedAmount - calculatedCharge,
     };
   }, [amount]);
 
   const { mutate: handleAddFunds, isPending } = useMutation({
     mutationFn: async (data: FundFormValues) => {
-      const numericAmount =
-        typeof data.amount === "string"
-          ? parseFloat(data.amount)
-          : data.amount || 0;
+      const parsedAmount = parseFloat(data.amount);
 
-      if (numericAmount < 10) return;
-      const response = await addFunds(data.email, numericAmount);
+      if (parsedAmount < 10) {
+        throw new Error("Amount must be at least ₦10");
+      }
+
+      const response = await addFunds(data.email, parsedAmount);
       return response.data;
     },
 
     onSuccess: (data) => {
       if (data?.data?.authorization_url) {
+        reset();
+        onSuccess();
         window.location.href = data.data.authorization_url;
       }
     },
-    onError: (data) => {
-      toast.error(data.message);
+    onError: (error) => {
+      toast.error(error?.message || "Failed to process payment");
     },
   });
 
@@ -81,132 +87,100 @@ export const AddFundsModal = ({
 
   const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    if (value === "" || !isNaN(Number(value))) {
+    if (value === "" || /^\d*\.?\d*$/.test(value)) {
       setValue("amount", value);
     }
   };
 
-  useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        handleClose();
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [handleClose]);
-
-  if (!isOpen) {
-    return null;
-  }
+  const handleOpenChange = (open: boolean) => {
+    if (!open && !isPending) {
+      reset();
+      onClose();
+    }
+  };
 
   return (
-    <div className="flex justify-center items-center overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none bg-neutral-800/70">
-      <div className="relative w-full md:w-4/6 lg:w-3/6 xl:w-2/5 my-6 mx-auto h-full lg:h-auto md:h-auto">
-        <div className="translate h-full lg:h-auto md:h-auto border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
-          <div className="flex items-center p-6 rounded-t justify-center relative border-b-[1px]">
-            <button
-              onClick={handleClose}
-              className="p-1 border-0 hover:opacity-70 transition absolute left-9"
-            >
-              <X size={18} />
-            </button>
-            <div className="text-lg font-semibold">Fund Wallet</div>
-          </div>
-          <div className="relative p-6 flex-auto">
-            <form onSubmit={handleSubmit(onSubmit)}>
-              <div className="mb-4">
-                <label className="block text-sm text-gray-500 mb-1">
-                  Email
-                </label>
-                <input
-                  type="email"
-                  className="w-full border rounded px-2 py-3 bg-gray-100 cursor-not-allowed"
-                  {...register("email", { required: true })}
-                  readOnly
-                />
-                {errors.email && (
-                  <span className="text-rose-500 text-xs">
-                    Email is required
-                  </span>
-                )}
-              </div>
-              <div className="mb-4">
-                <label className="block text-sm text-gray-500 mb-1">
-                  Amount (₦)
-                </label>
-                <input
-                  type="text"
-                  inputMode="numeric"
-                  className="w-full border rounded px-2 py-3"
-                  {...register("amount", {
-                    required: "Amount is required",
-                    validate: {
-                      min: (v) =>
-                        (typeof v === "string" ? parseFloat(v) : v || 0) >=
-                          10 || "Amount must be at least ₦10",
-                      isNumber: (v) =>
-                        v === "" ||
-                        !isNaN(Number(v)) ||
-                        "Please enter a valid number",
-                    },
-                    onChange: handleAmountChange,
-                  })}
-                />
-                {errors.amount && (
-                  <span className="text-rose-500 text-xs">
-                    {errors.amount.message}
-                  </span>
-                )}
-              </div>
+    <Dialog open={isOpen} onOpenChange={handleOpenChange}>
+      <DialogContent className="sm:max-w-[425px]">
+        <DialogHeader>
+          <DialogTitle>Fund Wallet</DialogTitle>
+        </DialogHeader>
 
-              {amount &&
-                (typeof amount === "string" ? parseFloat(amount) : amount) >=
-                  10 && (
-                  <div className="mb-4 p-3 bg-gray-50 rounded-md">
-                    <div className="flex justify-between text-gray-500 text-sm mb-1">
-                      <span>Service charge (3.5%)</span>
-                      <span>₦{charge.toLocaleString()}</span>
-                    </div>
-                    <div className="flex justify-between text-sm font-medium">
-                      <span>Amount to be funded</span>
-                      <span>₦{netAmount.toLocaleString()}</span>
-                    </div>
-                  </div>
-                )}
-
-              <button
-                type="submit"
-                className="w-full px-4 py-3 bg-indigo-600 text-white rounded-full hover:bg-indigo-700 disabled:bg-indigo-400 disabled:cursor-not-allowed"
-                disabled={
-                  !amount ||
-                  (typeof amount === "string" ? parseFloat(amount) : amount) <
-                    10 ||
-                  isPending
-                }
-              >
-                {isPending ? (
-                  <div className="flex items-center justify-center mt-1">
-                    <Loader2 className="h-4 w-4 animate-spin" color="#fff" />
-                    <span className="ml-2">Please wait...</span>
-                  </div>
-                ) : (
-                  `Pay ₦${
-                    amount
-                      ? typeof amount === "string"
-                        ? amount === ""
-                          ? ""
-                          : parseFloat(amount).toLocaleString()
-                        : amount.toLocaleString()
-                      : ""
-                  }`
-                )}
-              </button>
-            </form>
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="email" className="text-sm text-gray-500">
+              Email
+            </Label>
+            <Input
+              id="email"
+              type="email"
+              className="bg-gray-100 cursor-not-allowed"
+              {...register("email", { required: true })}
+              readOnly
+            />
+            {errors.email && (
+              <span className="text-rose-500 text-xs">Email is required</span>
+            )}
           </div>
-        </div>
-      </div>
-    </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="amount" className="text-sm text-gray-500">
+              Amount (₦)
+            </Label>
+            <Input
+              id="amount"
+              type="number"
+              inputMode="numeric"
+              placeholder="Enter amount"
+              {...register("amount", {
+                required: "Amount is required",
+                validate: {
+                  min: (v) =>
+                    parseFloat(v) >= 10 || "Amount must be at least ₦10",
+                  isNumber: (v) =>
+                    v === "" ||
+                    !isNaN(Number(v)) ||
+                    "Please enter a valid number",
+                },
+                onChange: handleAmountChange,
+              })}
+            />
+            {errors.amount && (
+              <span className="text-rose-500 text-xs">
+                {errors.amount.message}
+              </span>
+            )}
+          </div>
+
+          {numericAmount >= 10 && (
+            <div className="p-3 bg-gray-50 rounded-md space-y-2">
+              <div className="flex justify-between text-gray-500 text-sm">
+                <span>Service charge (3.5%)</span>
+                <span>{formatCurrency(charge)}</span>
+              </div>
+              <div className="flex justify-between text-sm font-medium">
+                <span>Amount to be funded</span>
+                <span>{formatCurrency(netAmount)}</span>
+              </div>
+            </div>
+          )}
+
+          <Button
+            type="submit"
+            className="w-full hover:bg-indigo-700 disabled:bg-indigo-400 bg-indigo-600"
+            disabled={!amount || numericAmount < 10 || isPending}
+          >
+            {isPending ? (
+              <div className="flex items-center justify-center">
+                <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                <span>Please wait...</span>
+              </div>
+            ) : (
+              `Pay ${numericAmount > 0 ? formatCurrency(numericAmount) : "0"}`
+            )}
+          </Button>
+        </form>
+      </DialogContent>
+    </Dialog>
   );
 };

@@ -38,6 +38,8 @@ export const usePlanValidation = () => {
     error: walletError,
   } = useFetchWallet();
 
+  const walletData = data?.data.wallet;
+
   useEffect(() => {
     const validatePlanAndWallet = () => {
       const planParam = searchParams.get("plan");
@@ -57,7 +59,7 @@ export const usePlanValidation = () => {
         return;
       }
 
-      if (walletError || !data?.wallet) {
+      if (walletError || !walletData) {
         setValidationState({
           isValidating: false,
           isValid: false,
@@ -71,7 +73,7 @@ export const usePlanValidation = () => {
       }
 
       const planConfig = getPlanConfig(validatedPlan);
-      const walletBalance = data.wallet.balance;
+      const walletBalance = walletData.balance;
 
       const insufficientFunds = hasInsufficientFunds(
         walletBalance,
@@ -97,7 +99,7 @@ export const usePlanValidation = () => {
     };
 
     validatePlanAndWallet();
-  }, [searchParams, data?.wallet, walletLoading, walletError, navigate]);
+  }, [searchParams, walletData, walletLoading, walletError, navigate]);
 
   return validationState;
 };

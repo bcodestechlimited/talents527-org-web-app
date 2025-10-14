@@ -14,15 +14,16 @@ export interface GetWalletResponse {
   success: boolean;
   status_code: number;
   message: string;
-  wallet: {
-    _id: string;
-    user: string;
-    balance: number;
-    currency: "NGN";
-    holds: 0;
+  data: {
+    wallet: {
+      _id: string;
+      user: string;
+      balance: number;
+      currency: "NGN";
+      holds: number;
+    };
   };
 }
-
 export interface FundWalletResponse {
   message: string;
   data: {

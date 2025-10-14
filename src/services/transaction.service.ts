@@ -21,7 +21,7 @@ export const fetchTransactions = async (params?: {
       queryParams.search = params.search.trim();
     if (params?.status) queryParams.status = params.status;
 
-    const response = await axiosInstance.get("/transactions/all", {
+    const response = await axiosInstance.get("/transactions", {
       params: queryParams,
       headers: {
         Authorization: `Bearer ${token}`,
