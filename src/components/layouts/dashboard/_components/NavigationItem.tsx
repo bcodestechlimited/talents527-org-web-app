@@ -16,35 +16,48 @@ const NotificationItem = ({ notification }: NotificationItemProps) => {
   const navigate = useNavigate();
 
   const handleClick = () => {
-    switch (notification.category) {
-      case "request":
-        if (notification.data?.requestId) {
-          navigate(`/dashboard/requests/${notification.data.requestId}`);
-        }
+    if (notification.category === "payment") {
+      if (!notification.read) {
+        // navigate(`/dashboard/wallet`, { state: { fromNotification: true } });
+        markNotificationAsRead(notification._id);
+      }
+      return;
+    }
+
+    if (notification.category === "interview") {
+      if (!notification.read) {
+        navigate(`/dashboard/interviews`);
+        markNotificationAsRead(notification._id);
+      }
+      return;
+    }
+
+    if (notification.type === "job_expired") {
+      if (!notification.read) {
+        markNotificationAsRead(notification._id);
+      }
+      return;
+    }
+
+    switch (notification.type) {
+      case "application_submitted":
+        navigate(`/dashboard/applications`);
         break;
-      case "job":
+
+      case "job_application_received":
         if (notification.data?.jobId) {
-          navigate(`/dashboard/jobs/${notification.data.jobId}`);
+          navigate(`/dashboard/applications/posts/${notification.data.jobId}`);
         }
         break;
-      case "application":
-        if (notification.data?.applicationId) {
-          navigate(
-            `/dashboard/applications/${notification.data.applicationId}`
-          );
-        }
-        break;
-      case "interview":
-        if (notification.data?.interviewId) {
-          navigate(`/dashboard/interviews/${notification.data.interviewId}`);
-        }
-        break;
-      case "payment":
+
+      case "payment_received":
+      case "wallet_low_balance":
         navigate(`/dashboard/wallet`);
         break;
-      case "system":
+
+      case "system_announcement":
       default:
-        navigate(`/dashboard/notifications`);
+        // navigate(`/dashboard/notifications`);
         break;
     }
 
@@ -79,8 +92,8 @@ const NotificationItem = ({ notification }: NotificationItemProps) => {
       key={notification._id}
       className={cn(
         "flex items-center p-3 cursor-pointer rounded-none hover:bg-gray-50 focus:bg-gray-50",
-        "h-20",
-        !notification.read && "bg-indigo-50 border-l-3 border-l-indigo-500"
+        "h-20 mb-1",
+        !notification.read && "bg-indigo-50"
       )}
       onClick={handleClick}
     >

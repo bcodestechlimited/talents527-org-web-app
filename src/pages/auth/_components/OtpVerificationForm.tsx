@@ -66,8 +66,8 @@ const OtpVerificationForm = () => {
   return (
     <CardWrapper
       headerLabel="🔐 Verify Your Account"
-      backButtonHref="/auth/signin"
-      backButtonLabel="Back to Sign In"
+      backButtonHref="/auth/login"
+      backButtonLabel="Back to Login"
     >
       <Form {...form}>
         <motion.form

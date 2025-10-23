@@ -24,20 +24,23 @@ export interface GetWalletResponse {
     };
   };
 }
+
 export interface FundWalletResponse {
   message: string;
   data: {
-    status: true;
-    message: string;
-    data: {
-      authorization_url: string;
-      access_code: string;
-      reference: string;
+    payment: {
+      status: boolean;
+      message: string;
+      data: {
+        authorization_url: string;
+        access_code: string;
+        reference: string;
+      };
     };
-  };
-  chargeDetails: {
-    grossAmount: number;
-    charge: number;
-    netAmount: number;
+    chargeDetails: {
+      grossAmount: number;
+      charge: number;
+      netAmount: number;
+    };
   };
 }

@@ -7,14 +7,26 @@ import leftCircle from "@/assets/svg/left-circle.svg";
 import { useQuery } from "@tanstack/react-query";
 import { organisationInfo } from "@/services/organisation.service";
 import { ScreenLoader } from "@/components/loaders/ScreenLoader";
+import { useState } from "react";
+import { motion } from "framer-motion";
 
 const DashboardLayout = () => {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
   const { data, isLoading, error, refetch } = useQuery({
     queryKey: ["organisation-info"],
     queryFn: organisationInfo,
     staleTime: 0,
     refetchOnWindowFocus: true,
   });
+
+  const toggleSidebar = () => {
+    setSidebarOpen(!sidebarOpen);
+  };
+
+  const closeSidebar = () => {
+    setSidebarOpen(false);
+  };
 
   if (isLoading) {
     return (
@@ -36,14 +48,36 @@ const DashboardLayout = () => {
   }
 
   return (
-    <div className="max-w-7xl mx-auto">
+    <div className="max-w-8xl mx-auto">
       <div className="min-h-screen flex">
-        <div className="">
+        <div className="hidden lg:block">
           <Sidebar />
         </div>
 
-        <div className="flex-1 flex flex-col">
-          <Navbar organisation={data?.organisation} />
+        {sidebarOpen && (
+          <motion.div
+            className="fixed inset-0 bg-indigo-50/10 backdrop-blur-sm z-40 lg:hidden"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            onClick={closeSidebar}
+          />
+        )}
+
+        <div className="lg:hidden">
+          <Sidebar
+            isMobile={true}
+            isOpen={sidebarOpen}
+            onClose={closeSidebar}
+          />
+        </div>
+
+        <div className="flex-1 flex flex-col min-w-0">
+          <Navbar
+            onToggleSidebar={toggleSidebar}
+            organisation={data?.organisation}
+          />
           <div className="w-full">
             <div className="">
               <div className="fixed right-0 top-0 -z-10">

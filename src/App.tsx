@@ -20,6 +20,9 @@ import SetupLayout from "./components/layouts/dashboard/Setup";
 import NewRequestsPage from "./pages/(protected)/requests/new-request";
 import RequestDetailsPage from "./pages/(protected)/requests/request-details";
 import AppNotificationWrapper from "./providers/AppNotificationWrapper";
+import AuthRedirect from "./guards/AuthRedirect";
+import ProtectedRoute from "./guards/ProtectedRoute";
+import NotFound from "./pages/not-found";
 
 function App() {
   const queryClient = new QueryClient();
@@ -32,13 +35,15 @@ function App() {
           <Routes>
             <Route path="/" element={<HomePage />} />
 
-            <Route path="auth" element={<AuthLayout />}>
-              <Route path="signup" element={<SignupPage />} />
-              <Route path="signin" element={<SigninPage />} />
-              <Route path="verify-account" element={<OtpPage />} />
+            <Route path="auth" element={<AuthRedirect />}>
+              <Route element={<AuthLayout />}>
+                <Route path="register" element={<SignupPage />} />
+                <Route path="login" element={<SigninPage />} />
+                <Route path="verify-account" element={<OtpPage />} />
+              </Route>
             </Route>
 
-            <Route>
+            <Route element={<ProtectedRoute />}>
               <Route path="dashboard" element={<DashboardLayout />}>
                 <Route index element={<ProfilePage />} />
                 <Route path="settings" element={<SettingsPage />} />
@@ -53,9 +58,13 @@ function App() {
               </Route>
             </Route>
 
-            <Route path="setup" element={<SetupLayout />}>
-              <Route index element={<SetupPage />} />
+            <Route element={<ProtectedRoute />}>
+              <Route path="setup" element={<SetupLayout />}>
+                <Route index element={<SetupPage />} />
+              </Route>
             </Route>
+
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
       </AppNotificationWrapper>

@@ -51,7 +51,7 @@ const SettingsForm = ({ orgInfo }: SettingsFormProps) => {
       toast.success(data.message);
       clearUser();
       queryClient.clear();
-      navigate("/auth/signin", { replace: true });
+      navigate("/auth/login", { replace: true });
     },
 
     onError: (error) => {

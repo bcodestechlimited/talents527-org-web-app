@@ -33,7 +33,7 @@ const WalletPage = () => {
   }, [searchParams]);
 
   const {
-    data,
+    data: walletData,
     isLoading: walletLoading,
     error: walletError,
     refetch: refetchWallet,
@@ -165,7 +165,7 @@ const WalletPage = () => {
         <div className="flex flex-col space-y-4 md:space-y-0 md:flex-row md:justify-between md:items-center mb-8">
           <div className="flex items-center space-x-2">
             <span className="text-3xl font-light">
-              ₦ {data?.wallet.balance.toLocaleString() ?? "0"}
+              ₦ {walletData?.data?.wallet.balance.toLocaleString() ?? "0"}
             </span>
             <Badge variant="outline" className="rounded-lg py-1.5 px-3 gap-2">
               <img

@@ -111,7 +111,7 @@ const NotificationDropdown = () => {
 
       <DropdownMenuContent
         align="end"
-        className="w-100 max-h-96 mt-2 overflow-y-auto p-0 shadow-sm rounded-none"
+        className="w-72 sm:w-96 max-h-96 mt-1 overflow-y-auto p-0 shadow-sm rounded-none"
       >
         <div className="flex items-center justify-between px-2 py-1">
           <DropdownMenuLabel className="text-base">
@@ -125,7 +125,8 @@ const NotificationDropdown = () => {
               className="text-xs text-blue-600 hover:text-blue-800"
             >
               <CheckCheck className="w-4 h-4 mr-1" />
-              Mark all read
+              <span className="hidden sm:inline">Mark all read</span>
+              <span className="sm:hidden">Mark all</span>
             </Button>
           )}
         </div>
@@ -135,7 +136,7 @@ const NotificationDropdown = () => {
         {isLoading ? (
           <LoadingSkeleton />
         ) : notifications.length > 0 ? (
-          <div className="max-h-80 overflow-y-auto">
+          <div className="max-h-80 overflow-y-auto scrollbar-none">
             {notifications.slice(0, 10).map((notification) => (
               <NotificationItem
                 key={notification._id}
@@ -144,14 +145,17 @@ const NotificationDropdown = () => {
             ))}
 
             {notifications.length > 10 && (
-              <DropdownMenuItem className="text-center text-sm text-blue-600 hover:text-blue-800">
+              <DropdownMenuItem
+                className="text-center text-sm text-blue-600 hover:text-blue-800 disabled:text-gray-400 disabled:hover:text-gray-400 disabled:cursor-not-allowed"
+                disabled
+              >
                 View all notifications
               </DropdownMenuItem>
             )}
           </div>
         ) : (
-          <div className="p-8 text-center">
-            <Bell className="w-12 h-12 text-gray-300 mx-auto mb-3" />
+          <div className="p-4 sm:p-8 text-center">
+            <Bell className="w-8 h-8 sm:w-12 sm:h-12 text-gray-300 mx-auto mb-2 sm:mb-3" />
             <p className="text-gray-500 text-sm">No notifications yet</p>
           </div>
         )}

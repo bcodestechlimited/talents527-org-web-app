@@ -7,6 +7,7 @@ import { Loader2 } from "lucide-react";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
@@ -70,10 +71,16 @@ export const AddFundsModal = ({
     },
 
     onSuccess: (data) => {
-      if (data?.data?.authorization_url) {
+      const redirectUrl = data?.payment?.data?.authorization_url;
+
+      if (redirectUrl) {
         reset();
         onSuccess();
-        window.location.href = data.data.authorization_url;
+        window.location.href = redirectUrl;
+      } else {
+        toast.error(
+          "Unable to initialize payment — missing authorization URL."
+        );
       }
     },
     onError: (error) => {
@@ -104,6 +111,9 @@ export const AddFundsModal = ({
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Fund Wallet</DialogTitle>
+          <DialogDescription className="sr-only">
+            Fund your wallet
+          </DialogDescription>
         </DialogHeader>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
@@ -114,7 +124,7 @@ export const AddFundsModal = ({
             <Input
               id="email"
               type="email"
-              className="bg-gray-100 cursor-not-allowed"
+              className="bg-gray-100 h-10 cursor-not-allowed"
               {...register("email", { required: true })}
               readOnly
             />
@@ -131,6 +141,7 @@ export const AddFundsModal = ({
               id="amount"
               type="number"
               inputMode="numeric"
+              className="h-10"
               placeholder="Enter amount"
               {...register("amount", {
                 required: "Amount is required",
@@ -167,7 +178,7 @@ export const AddFundsModal = ({
 
           <Button
             type="submit"
-            className="w-full hover:bg-indigo-700 disabled:bg-indigo-400 bg-indigo-600"
+            className="w-full h-10 hover:bg-indigo-700 disabled:bg-indigo-400 bg-indigo-900"
             disabled={!amount || numericAmount < 10 || isPending}
           >
             {isPending ? (

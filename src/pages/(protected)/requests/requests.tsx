@@ -17,9 +17,9 @@ const RequestsPage = () => {
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
-  const [searchValue, setSearchValue] = useState(
-    searchParams.get("search") || ""
-  );
+  const initialSearch = searchParams.get("search") || "";
+  const [searchValue, setSearchValue] = useState(initialSearch);
+
   const currentPage = parseInt(searchParams.get("page") || "1", 10);
   const pageSize = parseInt(searchParams.get("limit") || "10", 10);
   const status = searchParams.get("status") || "";
@@ -52,7 +52,7 @@ const RequestsPage = () => {
     page: currentPage,
     limit: pageSize,
     status,
-    ...(debouncedSearchValue && { search: debouncedSearchValue }),
+    search: debouncedSearchValue,
   };
 
   const { data, isLoading, error, refetch } = useFetchRequests(
@@ -60,16 +60,16 @@ const RequestsPage = () => {
     queryParams
   );
 
-  if (debouncedSearchValue !== (searchParams.get("search") || "")) {
-    updateSearchParams({
-      search: debouncedSearchValue || undefined,
-      page: undefined,
-    });
-  }
-
-  const handleSearchChange = useCallback((value: string) => {
-    setSearchValue(value);
-  }, []);
+  const handleSearchChange = useCallback(
+    (value: string) => {
+      setSearchValue(value);
+      updateSearchParams({
+        search: value || undefined,
+        page: undefined,
+      });
+    },
+    [updateSearchParams]
+  );
 
   const handlePageChange = useCallback(
     (page: number) => {

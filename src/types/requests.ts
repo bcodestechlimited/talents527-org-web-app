@@ -47,7 +47,9 @@ export interface GetRequestByIdResponse {
   success: boolean;
   status_code: number;
   message: string;
-  request: Request;
+  data: {
+    request: Request;
+  };
 }
 
 export interface GetAllRequestsResponse {

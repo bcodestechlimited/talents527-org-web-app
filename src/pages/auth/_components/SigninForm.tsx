@@ -59,7 +59,8 @@ const SigninForm = () => {
 
       if ("user" in data && "token" in data) {
         if (data.user.role !== "organisation") {
-          setError("Access denied: only organisations can sign in here.");
+          setError("Access denied: only organisations can log in here.");
+          useUserStore.getState().clearUser();
           return;
         }
 
@@ -93,7 +94,7 @@ const SigninForm = () => {
       }
     },
     onError: (error) => {
-      const errorMessage = getErrorMessage(error, "Failed to sign in");
+      const errorMessage = getErrorMessage(error, "Failed to log in");
       setError(errorMessage);
     },
   });
@@ -104,7 +105,7 @@ const SigninForm = () => {
       await signinMutation.mutateAsync(values);
     } catch (error) {
       console.error("Signin error:", error);
-      const errorMessage = getErrorMessage(error, "Failed to sign in user.");
+      const errorMessage = getErrorMessage(error, "Failed to log in user.");
       setError(errorMessage);
     }
   };
@@ -155,8 +156,8 @@ const SigninForm = () => {
           ? "📧 Email Verification"
           : "👋 Welcome Back"
       }
-      backButtonHref="/auth/signup"
-      backButtonLabel="Don't have an account? Sign up"
+      backButtonHref="/auth/register"
+      backButtonLabel="Don't have an account? Register"
     >
       <div className="overflow-hidden relative">
         <AnimatePresence mode="wait">

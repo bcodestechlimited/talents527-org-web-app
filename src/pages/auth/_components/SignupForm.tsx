@@ -69,8 +69,8 @@ const SignupForm = () => {
       headerLabel={
         showOtpVerification ? "🔐 Verify Your Account" : "🔐 New Organisation"
       }
-      backButtonHref="/auth/signin"
-      backButtonLabel="Already have an account ? Sign in"
+      backButtonHref="/auth/login"
+      backButtonLabel="Already have an account ? Log In"
     >
       <div className="overflow-hidden relative">
         <AnimatePresence mode="wait">

@@ -22,7 +22,7 @@ const UserDropdown = ({ organisation }: UserDropdownProps) => {
 
   const handleSignOut = () => {
     clearUser();
-    navigate("/auth/signin");
+    navigate("/auth/login");
   };
 
   return (
@@ -66,6 +66,7 @@ const UserDropdown = ({ organisation }: UserDropdownProps) => {
 
         <DropdownMenuItem
           className="px-3 py-3"
+          disabled
           onClick={() => navigate("/dashboard/billing")}
         >
           <CreditCard className="mr-2 h-4 w-4" />

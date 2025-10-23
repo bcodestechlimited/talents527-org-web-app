@@ -17,7 +17,7 @@ export const updateOrganisationsRequest = async (
 
   try {
     const response = await axiosInstance.patch<GetRequestByIdResponse>(
-      `/requests/organisation/${requestId}`,
+      `/organisations/requests/${requestId}`,
       updateData,
       {
         headers: { Authorization: `Bearer ${token}` },
@@ -39,7 +39,7 @@ export const getOrganisationsRequestById = async (
   const token = useUserStore.getState().token;
   try {
     const response = await axiosInstance.get<GetRequestByIdResponse>(
-      `/requests/organisation/${requestId}`,
+      `/organisations/requests/${requestId}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -62,9 +62,13 @@ export const createCandidateRequest = async (
   const token = useUserStore.getState().token;
 
   try {
-    const response = await axiosInstance.post("/requests/create", payload, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
+    const response = await axiosInstance.post(
+      "/organisations/requests/create",
+      payload,
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -91,7 +95,7 @@ export const getOrganisationsRequests = async (params?: {
     if (params?.status) queryParams.status = params.status;
 
     const response = await axiosInstance.get<GetAllRequestsResponse>(
-      "/requests/organisation/all",
+      "/organisations/requests",
       {
         params: queryParams,
         headers: {
