@@ -2,9 +2,8 @@ import { useLocation, useNavigate } from "react-router";
 import { SidebarItem } from "./SidebarItem";
 import {
   Settings,
-  Video,
   CircleDollarSign,
-  BriefcaseBusiness,
+  Briefcase,
   Compass,
   X,
 } from "lucide-react";
@@ -58,23 +57,18 @@ export const Sidebar = ({
             onClick={() => handleItemClick("/dashboard")}
           />
           <SidebarItem
+            label="Requests"
+            icon={Briefcase}
+            onClick={() => handleItemClick("/dashboard/requests")}
+            isActive={pathname.includes("/dashboard/requests")}
+          />
+          <SidebarItem
             label="Settings"
             icon={Settings}
             onClick={() => navigate("/dashboard/settings")}
             isActive={pathname === "/dashboard/settings"}
           />
-          <SidebarItem
-            label="Requests"
-            icon={BriefcaseBusiness}
-            onClick={() => handleItemClick("/dashboard/requests")}
-            isActive={pathname.includes("/dashboard/requests")}
-          />
-          <SidebarItem
-            label="Candidates"
-            icon={Video}
-            onClick={() => handleItemClick("/dashboard/candidates")}
-            isActive={pathname.includes("/dashboard/candidates")}
-          />
+
           <SidebarItem
             label="Wallet"
             icon={CircleDollarSign}

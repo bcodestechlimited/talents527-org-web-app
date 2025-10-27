@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { ArrowLeft } from "lucide-react";
+import { ChevronLeft } from "lucide-react";
 import { useNavigate, useParams } from "react-router";
 import EditRequestForm from "./_components/EditRequestForm";
 
@@ -14,15 +14,17 @@ const RequestDetailsPage = () => {
 
   return (
     <div className="p-4">
-      <div className="mb-4 flex items-center gap-4">
+      <div className="relative mb-6 space-y-4">
         <Button
-          onClick={() => navigate(-1)}
+          onClick={() => navigate("/dashboard/requests")}
           variant="ghost"
-          className="rounded-full bg-slate-100 h-12 w-12"
+          className="px-2 py-4 h-12 cursor-pointer"
         >
-          <ArrowLeft className="size-5" />
+          <span className="rounded-full shadow-sm p-1 border">
+            <ChevronLeft className="size-5" />
+          </span>
+          <span className="text-sm">Go Back</span>
         </Button>
-        <h1 className="text-xl text-slate-800 font-medium">Request Details</h1>
       </div>
 
       <EditRequestForm requestId={requestId} />

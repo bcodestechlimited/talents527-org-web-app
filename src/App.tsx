@@ -23,6 +23,7 @@ import AppNotificationWrapper from "./providers/AppNotificationWrapper";
 import AuthRedirect from "./guards/AuthRedirect";
 import ProtectedRoute from "./guards/ProtectedRoute";
 import NotFound from "./pages/not-found";
+import ShortlistedCandidatesPage from "./pages/(protected)/requests/candidates";
 
 function App() {
   const queryClient = new QueryClient();
@@ -53,6 +54,10 @@ function App() {
                 <Route
                   path="requests/:requestId"
                   element={<RequestDetailsPage />}
+                />
+                <Route
+                  path="requests/:requestId/candidates"
+                  element={<ShortlistedCandidatesPage />}
                 />
                 <Route path="wallet" element={<WalletPage />} />
               </Route>
