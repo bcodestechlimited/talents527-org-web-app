@@ -19,7 +19,7 @@ export const initNotificationService = (userId: string) => {
     socket.disconnect();
   }
 
-  const serverUrl = import.meta.env.VITE_SERVER_URL || "http://localhost:4000";
+  const serverUrl = import.meta.env.VITE_APP_SERVER_URL || "http://localhost:4000";
   socket = io(serverUrl, {
     transports: ["websocket", "polling"],
     reconnection: true,
