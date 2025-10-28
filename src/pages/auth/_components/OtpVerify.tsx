@@ -74,7 +74,7 @@ export const OtpVerify = () => {
             <FormOtpInput
               control={form.control}
               name="code"
-              label="Enter Verification Code"
+              label=""
               isDisabled={verifyOtpMutation.isPending}
               length={4}
             />

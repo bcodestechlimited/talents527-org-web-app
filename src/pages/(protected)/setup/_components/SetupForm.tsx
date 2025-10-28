@@ -26,6 +26,7 @@ import { getErrorMessage } from "@/lib/errorHandler";
 import { useOutletContext } from "react-router";
 import type { OrgInfoContext } from "@/types/contexts";
 import { toast } from "sonner";
+import { useUserStore } from "@/store/user.store";
 
 type FormValues = z.infer<typeof orgSetupSchema>;
 
@@ -49,6 +50,8 @@ const SetupForm = () => {
   const [direction, setDirection] = useState(1);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
+
+  const { user: currentUser, token, setUser } = useUserStore();
 
   const form = useForm<FormValues>({
     resolver: zodResolver(orgSetupSchema),
@@ -80,10 +83,24 @@ const SetupForm = () => {
     onSuccess: async (data) => {
       setError(null);
       toast.success(data.message);
+
+      if (currentUser) {
+        setUser(
+          {
+            ...currentUser,
+            isOrgSetup: true,
+          },
+          token
+        );
+      }
+
       navigate("/dashboard", { replace: true });
     },
     onError: (error: unknown) => {
-      const errorMessage = getErrorMessage(error, "Failed to create org");
+      const errorMessage = getErrorMessage(
+        error,
+        "Failed to create organisation"
+      );
       setError(errorMessage);
     },
   });

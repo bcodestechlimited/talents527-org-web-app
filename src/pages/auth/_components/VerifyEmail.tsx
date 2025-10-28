@@ -82,7 +82,7 @@ export const EmailVerify = ({
             <FormOtpInput
               control={form.control}
               name="code"
-              label="Enter 4-Digit Verification Code"
+              label=""
               isDisabled={verifyEmailMutation.isPending}
               length={4}
             />

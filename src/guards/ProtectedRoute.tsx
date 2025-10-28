@@ -3,6 +3,7 @@ import { useUserStore } from "@/store/user.store";
 
 const ProtectedRoute = () => {
   const { user } = useUserStore();
+
   const location = useLocation();
 
   if (!user) {
