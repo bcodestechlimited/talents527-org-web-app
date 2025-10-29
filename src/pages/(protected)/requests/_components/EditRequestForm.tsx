@@ -145,14 +145,15 @@ const EditRequestForm = ({ requestId }: EditRequestFormProps) => {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6  p-2 sm:p-4 md:p-6">
       {requestData?.data.request && (
         <RequestEscrowInfo request={requestData.data.request} />
       )}
 
       <Form {...form}>
         <form className="space-y-5" onSubmit={form.handleSubmit(handleSubmit)}>
-          <div className="grid grid-cols-2 gap-5">
+          {/* Responsive grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
             <FormTextInput
               control={form.control}
               name="title"
@@ -167,7 +168,7 @@ const EditRequestForm = ({ requestId }: EditRequestFormProps) => {
               placeholder="e.g Audit Manager"
               isDisabled={requestData?.data.request.status !== "submitted"}
             />
-            <div className="col-span-2">
+            <div className="sm:col-span-2">
               <FormTextAreaInput
                 control={form.control}
                 name="requestRequirements"
@@ -176,6 +177,7 @@ const EditRequestForm = ({ requestId }: EditRequestFormProps) => {
                 isDisabled={requestData?.data.request.status !== "submitted"}
               />
             </div>
+
             <FormSelectInput
               control={form.control}
               name="employmentType"
@@ -197,6 +199,7 @@ const EditRequestForm = ({ requestId }: EditRequestFormProps) => {
               options={workScheduleOptions}
               isDisabled={requestData?.data.request.status !== "submitted"}
             />
+
             <FormDateInput
               control={form.control}
               name="startDate"
@@ -215,6 +218,7 @@ const EditRequestForm = ({ requestId }: EditRequestFormProps) => {
                 requestMutation.isPending
               }
             />
+
             <FormTextInput
               control={form.control}
               name="workDays"
@@ -222,6 +226,7 @@ const EditRequestForm = ({ requestId }: EditRequestFormProps) => {
               placeholder="Mondays - Fridays"
               isDisabled={requestData?.data.request.status !== "submitted"}
             />
+
             <FormTimeInput
               control={form.control}
               name="resumptionTime"
@@ -242,6 +247,7 @@ const EditRequestForm = ({ requestId }: EditRequestFormProps) => {
                 requestMutation.isPending
               }
             />
+
             <FormTextInput
               control={form.control}
               name="workHours"
@@ -277,7 +283,8 @@ const EditRequestForm = ({ requestId }: EditRequestFormProps) => {
                 requestMutation.isPending
               }
             />
-            <div className="col-span-2">
+
+            <div className="sm:col-span-2">
               <MultiDocumentUpload
                 isDisabled={
                   requestData?.data.request.status !== "submitted" ||
@@ -297,19 +304,19 @@ const EditRequestForm = ({ requestId }: EditRequestFormProps) => {
             </Alert>
           )}
 
-          <div className="flex gap-1">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
             <Button
               type="button"
               variant="outline"
               disabled={requestMutation.isPending}
               onClick={() => navigate("/dashboard/requests")}
-              className="rounded-md"
+              className="rounded-md w-full sm:w-auto"
             >
               Cancel
             </Button>
             <Button
               type="submit"
-              className="rounded-md bg-indigo-700 hover:bg-indigo-800"
+              className="rounded-md bg-indigo-700 hover:bg-indigo-800 w-full sm:w-auto"
               disabled={
                 requestData?.data.request.status !== "submitted" ||
                 requestMutation.isPending

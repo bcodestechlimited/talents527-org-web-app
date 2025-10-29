@@ -18,9 +18,9 @@ export const AdminInfoSection = ({
 }: AdminInfoSectionProps) => {
   return (
     <>
-      <div className="flex">
-        <div className="w-xs">
-          <h4 className="font-medium">Admin Information</h4>
+      <div className="flex flex-col lg:flex-row gap-6">
+        <div className="lg:w-64 flex-shrink-0">
+          <h4 className="font-font-medium text-lg">Admin Information</h4>
           <p className="text-sm text-gray-600">
             This is the admin for {orgName}.
           </p>

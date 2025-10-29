@@ -38,7 +38,7 @@ export const FormTextAreaInput = <T extends FieldValues>({
             <Textarea
               disabled={isDisabled}
               {...field}
-              className="px-4 text-lg rounded-lg min-h-[100px]"
+              className="px-4 rounded-lg min-h-[100px]"
               placeholder={placeholder}
               rows={rows}
             />

@@ -88,27 +88,27 @@ export function SelectPricingDialog({
     onPlanSelect(selectedPlan);
     onOpenChange(false);
   };
+
   return (
     <Dialog open={isOpen} onOpenChange={handleOpenChange}>
       <DialogContent
-        // showCloseButton={false}
-        className="h-max p-0 sm:max-w-5xl"
+        className="max-h-[90vh] overflow-y-auto p-0 sm:max-w-5xl max-w-full rounded-2xl"
         onPointerDownOutside={(e) => e.preventDefault()}
       >
-        <div className="p-15">
-          <DialogHeader className="flex flex-col items-center mb-10">
-            <DialogTitle className="text-2xl">
+        <div className="p-6 sm:p-10">
+          <DialogHeader className="flex flex-col items-center mb-8 text-center">
+            <DialogTitle className="text-xl sm:text-2xl font-semibold">
               Choose Your Request Plan
             </DialogTitle>
 
-            <DialogDescription className="text-center max-w-xl">
-              Please select any of the plan. Note that you are expected to fund
-              your account with the selected plan amount.
+            <DialogDescription className="max-w-lg text-gray-600">
+              Please select any of the plans below. Note that you’re expected to
+              fund your account with the selected plan amount.
             </DialogDescription>
           </DialogHeader>
 
-          <div className="flex gap-5 border p-6 rounded-2xl">
-            <div className="flex-1 flex flex-col gap-5">
+          <div className="flex flex-col lg:flex-row gap-5 border p-4 sm:p-6 rounded-2xl">
+            <div className="flex-1 flex flex-col gap-4">
               {pricingPlans.map((plan) => (
                 <PlanCard
                   key={plan.id}
@@ -120,10 +120,12 @@ export function SelectPricingDialog({
             </div>
 
             {selectedPlanData && (
-              <PlanDetails
-                plan={selectedPlanData}
-                onSelect={handlePlanSelection}
-              />
+              <div className="flex-1">
+                <PlanDetails
+                  plan={selectedPlanData}
+                  onSelect={handlePlanSelection}
+                />
+              </div>
             )}
           </div>
         </div>

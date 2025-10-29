@@ -16,11 +16,11 @@ export const SocialsSection = ({
 }: SocialsSectionProps) => {
   return (
     <>
-      <div className="flex">
-        <div className="w-xs">
-          <h4 className="font-medium">Socials Profiles (Optional)</h4>
+      <div className="flex flex-col lg:flex-row gap-6">
+        <div className="lg:w-64 flex-shrink-0">
+          <h4 className="font-medium text-lg">Social Profiles (Optional)</h4>
           <p className="text-sm text-gray-600">
-            Update {orgName} socials profiles.
+            Update {orgName} social profiles here.
           </p>
         </div>
 

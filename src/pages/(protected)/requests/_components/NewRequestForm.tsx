@@ -135,7 +135,7 @@ const NewRequestForm = () => {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 px-2 md:px-4">
       <RequestPlanStatus
         planConfig={planConfig}
         walletBalance={walletBalance}
@@ -145,12 +145,12 @@ const NewRequestForm = () => {
 
       <Form {...form}>
         <form className="space-y-5" onSubmit={form.handleSubmit(handleSubmit)}>
-          <div className="grid grid-cols-2 gap-5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
             <FormTextInput
               control={form.control}
               name="title"
               label="Request Title"
-              placeholder="e.g Request for 5 audit managers"
+              placeholder="e.g Request for audit managers"
               isDisabled={hasInsufficientFunds}
             />
             <FormTextInput
@@ -160,7 +160,8 @@ const NewRequestForm = () => {
               placeholder="e.g Audit Manager"
               isDisabled={hasInsufficientFunds}
             />
-            <div className="col-span-2">
+
+            <div className="col-span-1 sm:col-span-2">
               <FormTextAreaInput
                 control={form.control}
                 name="requestRequirements"
@@ -169,6 +170,7 @@ const NewRequestForm = () => {
                 isDisabled={hasInsufficientFunds || requestMutation.isPending}
               />
             </div>
+
             <FormSelectInput
               control={form.control}
               name="employmentType"
@@ -208,6 +210,7 @@ const NewRequestForm = () => {
                 requestMutation.isPending
               }
             />
+
             <FormTextInput
               control={form.control}
               name="workDays"
@@ -215,6 +218,7 @@ const NewRequestForm = () => {
               placeholder="Mondays - Fridays"
               isDisabled={hasInsufficientFunds || requestMutation.isPending}
             />
+
             <FormTimeInput
               control={form.control}
               name="resumptionTime"
@@ -265,7 +269,7 @@ const NewRequestForm = () => {
               options={genderPreferenceOptions}
               isDisabled={hasInsufficientFunds || requestMutation.isPending}
             />
-            <div className="col-span-2">
+            <div className="col-span-1 sm:col-span-2">
               <MultiDocumentUpload
                 isDisabled={hasInsufficientFunds || requestMutation.isPending}
                 organisation={orgInfo.organisation}
@@ -282,19 +286,19 @@ const NewRequestForm = () => {
             </Alert>
           )}
 
-          <div className="flex gap-1">
+          <div className="flex flex-col sm:flex-row gap-2 sm:gap-1">
             <Button
               type="button"
               variant="outline"
               disabled={requestMutation.isPending}
               onClick={() => navigate("/dashboard/requests")}
-              className="rounded-md"
+              className="rounded-md w-full sm:w-auto"
             >
               Cancel
             </Button>
             <Button
               type="submit"
-              className="rounded-md bg-indigo-700 hover:bg-indigo-800"
+              className="rounded-md bg-indigo-700 hover:bg-indigo-800 w-full sm:w-auto"
               disabled={
                 hasInsufficientFunds || requestMutation.isPending || !isValid
               }

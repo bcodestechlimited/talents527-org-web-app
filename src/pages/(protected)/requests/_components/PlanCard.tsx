@@ -26,31 +26,44 @@ export function PlanCard({
 }) {
   return (
     <Card
-      className={`cursor-pointer transition-all shadow-none ${
-        isActive ? "bg-indigo-500 text-white" : ""
-      }`}
       onClick={onClick}
+      className={`cursor-pointer transition-all duration-200 shadow-sm hover:shadow-md border ${
+        isActive
+          ? "bg-indigo-500 text-white border-indigo-600"
+          : "hover:border-indigo-300"
+      }`}
     >
-      <div className="px-4">
-        <div className="flex flex-row items-center justify-between">
-          <div className="flex items-center gap-2">
+      <div className="p-4 sm:p-5">
+        <div className="flex items-center justify-between flex-wrap gap-3">
+          <div className="flex items-center gap-3">
             <div
-              className={`rounded-full text-indigo-600 p-3 ${
-                isActive ? "bg-white" : "bg-indigo-50"
+              className={`rounded-full p-3 ${
+                isActive
+                  ? "bg-white text-indigo-600"
+                  : "bg-indigo-50 text-indigo-600"
               }`}
             >
               {plan.icon}
             </div>
             <div>
-              <p className="font-medium">{plan.name}</p>
-              <span className="text-xs">{plan.description}</span>
+              <p className="font-semibold text-sm sm:text-base">{plan.name}</p>
+              <span
+                className={`text-xs ${
+                  isActive ? "text-white/80" : "text-gray-600"
+                }`}
+              >
+                {plan.description}
+              </span>
             </div>
           </div>
-          <div>
-            <span className="text-2xl">{plan.abbrPrice}</span>
+
+          <div className="text-right">
+            <span className="text-lg sm:text-2xl font-semibold">
+              {plan.abbrPrice}
+            </span>
             <span
               className={`text-xs ${
-                isActive ? "text-white/80" : "text-slate-500"
+                isActive ? "text-white/70" : "text-gray-500"
               }`}
             >
               /{plan.pricePer}

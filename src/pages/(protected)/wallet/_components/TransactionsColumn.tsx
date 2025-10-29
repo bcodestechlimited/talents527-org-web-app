@@ -2,7 +2,6 @@ import { Badge } from "@/components/ui/badge";
 
 import type { ColumnDef } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router";
 import type { Transaction } from "@/types/transactions";
 import { format } from "date-fns";
 
@@ -65,15 +64,12 @@ export const TransactionsColumn: ColumnDef<Transaction>[] = [
   {
     id: "actions",
     header: () => <div className="pl-2">Actions</div>,
-    cell: ({ row }) => {
-      const entry = row.original;
+    cell: () => {
       return (
         <div className="pl-2">
-          <Link to={entry._id} state={{ entry }}>
-            <Button size="sm" variant="ghost" className="cursor-pointer">
-              View
-            </Button>
-          </Link>
+          <Button size="sm" variant="ghost" className="cursor-pointer">
+            View
+          </Button>
         </div>
       );
     },

@@ -17,28 +17,22 @@ import { useMarkAsHired } from "@/hooks/useMarkAsHired";
 
 interface Candidate {
   _id: string;
-  firstName: string;
-  lastName: string;
-  profession: string;
-  yearsOfExperience: number;
-  age: number;
-  email: string;
-  phone: string;
-  location: {
-    state: string;
-    country: string;
+  firstName?: string;
+  lastName?: string;
+  profession?: string;
+  yearsOfExperience?: number;
+  age?: number;
+  email?: string;
+  phone?: string;
+  location?: {
+    state?: string;
+    country?: string;
   };
-  skills: Array<{
-    _id: string;
-    name: string;
-  }>;
-  qualifications: Array<{
-    _id: string;
-    name: string;
-  }>;
-  salaryExpectation: {
-    min: number;
-    max: number;
+  skills?: Array<{ _id: string; name?: string }>;
+  qualifications?: Array<{ _id: string; name?: string }>;
+  salaryExpectation?: {
+    min?: number;
+    max?: number;
   };
   resumeUrl?: string;
   imageUrl?: string;
@@ -59,41 +53,65 @@ const CandidateCard = ({
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const { mutate: markAsHired, isPending: isMarkingHired } = useMarkAsHired();
 
-  const handleMarkAsHired = () => {
-    setShowConfirmModal(true);
-  };
+  const handleMarkAsHired = () => setShowConfirmModal(true);
 
   const handleConfirmHire = () => {
     markAsHired(
       { requestId, professionalId: candidate._id },
-      {
-        onSuccess: () => {
-          setShowConfirmModal(false);
-        },
-      }
+      { onSuccess: () => setShowConfirmModal(false) }
     );
   };
 
-  const isHired = candidate.isHired;
+  const isHired = candidate?.isHired ?? false;
+
+  const fullName =
+    `${candidate?.firstName ?? ""} ${candidate?.lastName ?? ""}`.trim() ||
+    "Unnamed Candidate";
+  const profession = candidate?.profession ?? "Not specified";
+  const yearsOfExperience =
+    candidate?.yearsOfExperience != null
+      ? `${candidate.yearsOfExperience} years exp.`
+      : "Experience not provided";
+  const age =
+    candidate?.age != null ? `${candidate.age} years old` : "Age not provided";
+  const email = candidate?.email ?? "No email provided";
+  const phone = candidate?.phone ?? "No phone number";
+  const location =
+    candidate?.location?.state && candidate?.location?.country
+      ? `${candidate.location.state}, ${candidate.location.country}`
+      : "Location not specified";
+  const minSalary = candidate?.salaryExpectation?.min
+    ? formatCurrency(candidate.salaryExpectation.min)
+    : null;
+  const maxSalary = candidate?.salaryExpectation?.max
+    ? formatCurrency(candidate.salaryExpectation.max)
+    : null;
+
+  const salaryText =
+    minSalary && maxSalary
+      ? `${minSalary} - ${maxSalary}`
+      : "Salary not specified";
 
   return (
     <>
       <Card className="p-6 shadow-none">
         <div className="flex items-start gap-4 mb-4">
           <UserAvatar
-            firstName={candidate.firstName}
-            lastName={candidate.lastName}
-            avatarUrl={candidate.imageUrl}
+            firstName={candidate?.firstName ?? ""}
+            lastName={candidate?.lastName ?? ""}
+            avatarUrl={candidate?.imageUrl}
             className="h-16 w-16"
           />
+
           <div className="flex-1">
             <div className="flex items-start justify-between">
               <div>
                 <h3 className="text-lg font-semibold text-gray-900">
-                  {candidate.firstName} {candidate.lastName}
+                  {fullName}
                 </h3>
-                <p className="text-sm text-gray-600">{candidate.profession}</p>
+                <p className="text-sm text-gray-600">{profession}</p>
               </div>
+
               {isHired && (
                 <Badge className="bg-green-100 text-green-800 hover:bg-green-100">
                   <CheckCircle className="h-3 w-3 mr-1" />
@@ -101,12 +119,13 @@ const CandidateCard = ({
                 </Badge>
               )}
             </div>
-            <div className="flex items-center gap-2 mt-2">
+
+            <div className="flex items-center gap-2 mt-2 flex-wrap">
               <Badge variant="outline" className="text-xs">
-                {candidate.yearsOfExperience} years exp.
+                {yearsOfExperience}
               </Badge>
               <Badge variant="outline" className="text-xs">
-                {candidate.age} years old
+                {age}
               </Badge>
             </div>
           </div>
@@ -115,23 +134,21 @@ const CandidateCard = ({
         <div className="space-y-2 mb-4 text-sm">
           <div className="flex items-center gap-2 text-gray-600">
             <Mail className="h-4 w-4" />
-            <span>{candidate.email}</span>
+            <span>{email}</span>
           </div>
           <div className="flex items-center gap-2 text-gray-600">
             <Phone className="h-4 w-4" />
-            <span>{candidate.phone}</span>
+            <span>{phone}</span>
           </div>
           <div className="flex items-center gap-2 text-gray-600">
             <MapPin className="h-4 w-4" />
-            <span>
-              {candidate.location.state}, {candidate.location.country}
-            </span>
+            <span>{location}</span>
           </div>
         </div>
 
-        {candidate.skills && candidate.skills.length > 0 && (
-          <div className="mb-4">
-            <p className="text-xs font-medium text-gray-700 mb-2">Skills</p>
+        <div className="mb-4">
+          <p className="text-xs font-medium text-gray-700 mb-2">Skills</p>
+          {candidate?.skills?.length ? (
             <div className="flex flex-wrap gap-1">
               {candidate.skills.slice(0, 5).map((skill) => (
                 <Badge
@@ -139,7 +156,7 @@ const CandidateCard = ({
                   variant="outline"
                   className="text-xs bg-green-50 text-green-700"
                 >
-                  {skill.name}
+                  {skill.name ?? "Unnamed skill"}
                 </Badge>
               ))}
               {candidate.skills.length > 5 && (
@@ -148,15 +165,17 @@ const CandidateCard = ({
                 </Badge>
               )}
             </div>
-          </div>
-        )}
+          ) : (
+            <p className="text-xs text-gray-500">No skills listed</p>
+          )}
+        </div>
 
-        {candidate.qualifications && candidate.qualifications.length > 0 && (
-          <div className="mb-4">
-            <p className="text-xs font-medium text-gray-700 mb-2">
-              <Award className="h-3 w-3 inline mr-1" />
-              Qualifications
-            </p>
+        <div className="mb-4">
+          <p className="text-xs font-medium text-gray-700 mb-2">
+            <Award className="h-3 w-3 inline mr-1" />
+            Qualifications
+          </p>
+          {candidate?.qualifications?.length ? (
             <div className="flex flex-wrap gap-1">
               {candidate.qualifications.map((qual) => (
                 <Badge
@@ -164,25 +183,24 @@ const CandidateCard = ({
                   variant="outline"
                   className="text-xs bg-blue-50 text-blue-700"
                 >
-                  {qual.name}
+                  {qual.name ?? "Unnamed qualification"}
                 </Badge>
               ))}
             </div>
-          </div>
-        )}
+          ) : (
+            <p className="text-xs text-gray-500">No qualifications listed</p>
+          )}
+        </div>
 
         <div className="mb-4 p-3 bg-gray-50 rounded-lg">
           <p className="text-xs font-medium text-gray-700 mb-1">
             Salary Expectation
           </p>
-          <p className="text-sm font-semibold text-gray-900">
-            {formatCurrency(candidate.salaryExpectation.min)} -{" "}
-            {formatCurrency(candidate.salaryExpectation.max)}
-          </p>
+          <p className="text-sm font-semibold text-gray-900">{salaryText}</p>
         </div>
 
         <div className="flex gap-2 pt-4 border-t">
-          {candidate.resumeUrl && (
+          {candidate?.resumeUrl ? (
             <Button
               variant="outline"
               size="sm"
@@ -193,7 +211,18 @@ const CandidateCard = ({
               <Download className="h-4 w-4 mr-2" />
               Resume
             </Button>
+          ) : (
+            <Button
+              variant="outline"
+              size="sm"
+              className="flex-1 text-gray-400 cursor-not-allowed"
+              disabled
+            >
+              <Download className="h-4 w-4 mr-2" />
+              No Resume
+            </Button>
           )}
+
           <Button
             size="sm"
             className="flex-1 bg-green-600 hover:bg-green-700"
@@ -217,13 +246,12 @@ const CandidateCard = ({
         </div>
       </Card>
 
-      {/* Confirmation Modal */}
       <ConfirmHireModal
         isOpen={showConfirmModal}
         onClose={() => setShowConfirmModal(false)}
         onConfirm={handleConfirmHire}
         isLoading={isMarkingHired}
-        candidateName={`${candidate.firstName} ${candidate.lastName}`}
+        candidateName={fullName}
         requestTitle={requestTitle}
       />
     </>

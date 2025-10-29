@@ -25,8 +25,8 @@ const ProfilePage = () => {
     <div>
       <BannerAndLogo orgName={orgName} website={website} url={logoId?.url} />
 
-      <div className="p-6">
-        <div className="p-6">
+      <div className="px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto">
           <ProfileForm orgInfo={orgInfo} />
         </div>
       </div>
