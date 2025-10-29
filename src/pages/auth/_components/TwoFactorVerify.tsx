@@ -124,7 +124,7 @@ export const TwoFactorVerify = ({
             <FormOtpInput
               control={form.control}
               name="twoFactorCode"
-              label="Enter 6-Digit Verification Code"
+              label=""
               isDisabled={verifyTwoFactorMutation.isPending}
               length={6}
             />
@@ -156,7 +156,6 @@ export const TwoFactorVerify = ({
             </Button>
           </motion.div>
 
-          {/* Resend Code Button */}
           <div className="text-center">
             <Button
               type="button"
@@ -177,7 +176,6 @@ export const TwoFactorVerify = ({
             </Button>
           </div>
 
-          {/* Back to Login Button */}
           <div className="text-center">
             <Button
               type="button"
