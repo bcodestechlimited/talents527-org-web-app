@@ -99,7 +99,7 @@ const ProfileForm = ({ orgInfo }: ProfileFormProps) => {
         onSubmit={form.handleSubmit(onSubmit)}
         className="flex flex-col space-y-4"
       >
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
           <div>
             <h3 className="text-lg font-medium">Organisation Profile</h3>
             <p className="text-sm text-gray-600">

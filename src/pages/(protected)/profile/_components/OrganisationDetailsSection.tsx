@@ -49,15 +49,15 @@ export const OrganisationDetailsSection = ({
     form.setValue("organisation.location.state", "");
     form.trigger([
       "organisation.location.state",
-      "organisation.location.state",
+      "organisation.location.country",
     ]);
   };
 
   return (
     <>
-      <div className="flex">
-        <div className="w-xs">
-          <h4 className="font-medium">Organisation Details</h4>
+      <div className="flex flex-col lg:flex-row gap-6">
+        <div className="lg:w-64 flex-shrink-0">
+          <h4 className="font-medium text-lg">Organisation Details</h4>
           <p className="text-sm text-gray-600">
             Update {orgName} details here.
           </p>
@@ -76,10 +76,11 @@ export const OrganisationDetailsSection = ({
             name="organisation.website"
             label="Website"
             isDisabled={isDisabled}
-            placeholder="https://www.grbokelimted.com"
+            placeholder="https://www.gbroke.com"
             type="url"
           />
-          <div className="col-span-2">
+
+          <div className="col-span-1 md:col-span-2">
             <FormTextAreaInput
               control={form.control}
               name="organisation.aboutOrg"
@@ -89,6 +90,7 @@ export const OrganisationDetailsSection = ({
               rows={5}
             />
           </div>
+
           <FormSelectInput
             control={form.control}
             name="organisation.industry"
@@ -99,17 +101,18 @@ export const OrganisationDetailsSection = ({
           <FormSelectInput
             control={form.control}
             name="organisation.orgType"
-            label="Type of Organization"
+            label="Type of Organisation"
             isDisabled={isDisabled}
             options={orgTypeOptions}
           />
           <FormSelectInput
             control={form.control}
             name="organisation.orgSize"
-            label="Size of Organization"
+            label="Size of Organisation"
             isDisabled={isDisabled}
             options={orgSizeOptions}
           />
+
           <FormSelectInput
             control={form.control}
             name="organisation.location.country"
@@ -135,13 +138,16 @@ export const OrganisationDetailsSection = ({
               !currentCountry || stateOptions.length === 0 || isDisabled
             }
           />
-          <FormTextInput
-            control={form.control}
-            name="organisation.location.address"
-            label="Address"
-            isDisabled={isDisabled}
-            placeholder="Street address"
-          />
+
+          <div className="col-span-1 md:col-span-2">
+            <FormTextInput
+              control={form.control}
+              name="organisation.location.address"
+              label="Address"
+              isDisabled={isDisabled}
+              placeholder="Street address"
+            />
+          </div>
         </div>
       </div>
 

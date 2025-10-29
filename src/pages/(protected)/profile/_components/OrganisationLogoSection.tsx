@@ -12,13 +12,13 @@ export const OrganisationLogoSection = ({
 }: OrganisationLogoSectionProps) => {
   return (
     <>
-      <div className="flex">
-        <div className="w-xs">
-          <h4 className="font-medium">Organisation Logo</h4>
+      <div className="flex flex-col lg:flex-row gap-6">
+        <div className="lg:w-64 flex-shrink-0">
+          <h4 className="font-medium text-lg">Organisation Logo</h4>
           <p className="text-sm text-gray-600">Update {orgName} logo here.</p>
         </div>
 
-        <div className="flex-1 grid grid-cols-1">
+        <div className="flex-1">
           <UpdateLogo organisation={organisation} />
         </div>
       </div>
