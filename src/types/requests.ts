@@ -2,7 +2,7 @@ import type { Organisation } from "./organisation";
 import type { Pagination } from "./pagination";
 import type { Asset } from "./upload";
 
-export type PlanType = "basic" | "standard" | "enterprise";
+export type PlanType = "basic" | "standard" | "pro";
 export type EmploymentType = "full-time" | "part-time" | "contract";
 export type WorkScheduleType = "office-hours" | "shifts";
 export type ModeOfWorkType = "on-site" | "remote" | "hybrid";

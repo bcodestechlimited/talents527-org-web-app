@@ -10,7 +10,7 @@ import { useState } from "react";
 import { PlanCard, type PricingPlan } from "./PlanCard";
 import { PlanDetails } from "./PlanDetails";
 
-export type PlanType = "basic" | "standard" | "enterprise";
+export type PlanType = "basic" | "standard" | "pro";
 
 interface SelectPricingDialogProps {
   isOpen: boolean;
@@ -52,8 +52,8 @@ const pricingPlans: PricingPlan[] = [
     ],
   },
   {
-    id: "enterprise",
-    name: "Enterprise Plan",
+    id: "pro",
+    name: "Pro Plan",
     description: "For large organisations",
     price: "₦30,000",
     abbrPrice: "₦30K",
@@ -101,7 +101,7 @@ export function SelectPricingDialog({
               Choose Your Request Plan
             </DialogTitle>
 
-            <DialogDescription className="max-w-lg text-gray-600">
+            <DialogDescription className="max-w-lg text-center text-gray-600">
               Please select any of the plans below. Note that you’re expected to
               fund your account with the selected plan amount.
             </DialogDescription>
