@@ -1,4 +1,4 @@
-export type PlanType = "basic" | "standard" | "enterprise";
+export type PlanType = "basic" | "standard" | "pro";
 
 export interface PlanConfig {
   id: PlanType;
@@ -12,21 +12,21 @@ export const PLAN_CONFIGS: Record<PlanType, PlanConfig> = {
   basic: {
     id: "basic",
     name: "Basic Plan",
-    price: 5000, // in Naira
+    price: 5000,
     displayPrice: "₦5,000",
     candidates: 5,
   },
   standard: {
     id: "standard",
     name: "Standard Plan",
-    price: 15000, // in Naira
+    price: 15000,
     displayPrice: "₦15,000",
     candidates: 15,
   },
-  enterprise: {
-    id: "enterprise",
-    name: "Enterprise Plan",
-    price: 30000, // in Naira
+  pro: {
+    id: "pro",
+    name: "Pro Plan",
+    price: 30000,
     displayPrice: "₦30,000",
     candidates: 30,
   },
@@ -35,7 +35,7 @@ export const PLAN_CONFIGS: Record<PlanType, PlanConfig> = {
 export const validatePlan = (planParam: string | null): PlanType | null => {
   if (!planParam) return null;
 
-  const validPlans: PlanType[] = ["basic", "standard", "enterprise"];
+  const validPlans: PlanType[] = ["basic", "standard", "pro"];
   return validPlans.includes(planParam as PlanType)
     ? (planParam as PlanType)
     : null;
