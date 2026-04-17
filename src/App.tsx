@@ -8,6 +8,7 @@ import HomePage from "./pages/home/home";
 import SignupPage from "./pages/auth/signup";
 import SigninPage from "./pages/auth/signin";
 import ProfilePage from "./pages/(protected)/profile/profile";
+import UserProfilePage from "./pages/(protected)/profile/user-profile";
 import SettingsPage from "./pages/(protected)/settings/settings";
 import RequestsPage from "./pages/(protected)/requests/requests";
 import CandidatesPage from "./pages/(protected)/candidates/candidates";
@@ -47,6 +48,7 @@ function App() {
             <Route element={<ProtectedRoute />}>
               <Route path="dashboard" element={<DashboardLayout />}>
                 <Route index element={<ProfilePage />} />
+                <Route path="profile" element={<UserProfilePage />} />
                 <Route path="settings" element={<SettingsPage />} />
                 <Route path="candidates" element={<CandidatesPage />} />
                 <Route path="requests" element={<RequestsPage />} />
